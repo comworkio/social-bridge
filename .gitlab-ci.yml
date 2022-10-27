@@ -27,6 +27,7 @@ api_x86:
       - ci/docker-deliver.sh
       - ci/deploy.sh
       - docker-compose-build-x86.yml
+      - docker-compose-intra.yml
       - Dockerfile
   tags:
     - imagesbuilder
@@ -46,6 +47,7 @@ api_arm:
       - ci/docker-deliver.sh
       - ci/deploy.sh
       - docker-compose-build-arm.yml
+      - docker-compose-intra.yml
       - Dockerfile.arm
   tags:
     - buildarm

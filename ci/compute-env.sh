@@ -8,3 +8,4 @@ export TWITTER_KEYWORD_2=techwatch
 export TWITTER_USERNAME_1=idriss_neumann
 export SLACK_TRIGGER=on
 export SLACK_CHANNEL="#techno-radar"
+export UNIQ_VERSION="${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}"
