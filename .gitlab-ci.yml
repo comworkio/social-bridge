@@ -1,5 +1,7 @@
 stages:
   - publish
+  - deliver
+  - deploy
 
 mirror:
   stage: publish
@@ -9,3 +11,59 @@ mirror:
     - /^(main.*)$/
   tags:
     - mirror
+
+api_x86:
+  stage: deliver
+  script:
+    - setsid ./ci/docker-deliver.sh "x86" "twitter-slack" "1.0"
+  only:
+    refs:
+      - /^(main.*)$/
+    changes:
+      - .gitlab-ci.yml
+      - utils/*
+      - main.py
+      - requirements.txt
+      - ci/docker-deliver.sh
+      - ci/deploy.sh
+      - docker-compose-build-x86.yml
+      - Dockerfile
+  tags:
+    - github-changelog
+
+api_arm:
+  stage: deliver
+  script:
+    - setsid ./ci/docker-deliver.sh "arm" "twitter-slack" "1.0"
+  only:
+    refs:
+      - /^(main.*)$/
+    changes:
+      - .gitlab-ci.yml
+      - utils/*
+      - main.py
+      - requirements.txt
+      - ci/docker-deliver.sh
+      - ci/deploy.sh
+      - docker-compose-build-arm.yml
+      - Dockerfile.arm
+  tags:
+    - buildarm
+
+deploy:
+  stage: deploy
+  script:
+    - setsid ./ci/deploy.sh
+  only:
+    refs:
+      - /^(main.*)$/
+    changes:
+      - .gitlab-ci.yml
+      - utils/*
+      - main.py
+      - requirements.txt
+      - ci/deploy.sh
+      - docker-compose-intra.yml
+      - Dockerfile
+  tags:
+    - github-changelog
