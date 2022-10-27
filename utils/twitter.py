@@ -3,8 +3,6 @@ from datetime import datetime
 
 import os
 
-from common_utils import *
-
 ts = TwitterSearch (
     consumer_key = os.environ['TWITTER_CONSUMER_KEY'],
     consumer_secret = os.environ['TWITTER_CONSUMER_SECRET'],
