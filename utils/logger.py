@@ -15,7 +15,7 @@ def check_log_level ( log_level ):
     else:
         return log_level != "debug" and log_level != "DEBUG"
 
-def quiet_log_msg ( log_level, message, username ):
+def quiet_log_msg ( log_level, message ):
     if check_log_level(log_level):
         print ("[{}] {}".format(log_level, message))
 
