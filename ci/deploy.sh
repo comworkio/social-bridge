@@ -20,5 +20,5 @@ env|grep -E "^(TWITTER_KEYWORD|TWITTER_USERNAME|SLACK_PUBLIC_TOKEN)"|while read 
   echo "${REPLY}" >> "${ENV_FILE}"
 done
 
-docker rmi -f "comworkio/twitter-slack:latest" || :
+docker rmi -f "comworkio/twitter-slack:${UNIQ_VERSION}" || :
 docker-compose -f docker-compose-intra.yml up -d --force-recreate
