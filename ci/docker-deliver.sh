@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./ci/compute-env.sh
+
 BASE_DIR="$(dirname $0)"
 REPO_PATH="${BASE_DIR}/.."
 
