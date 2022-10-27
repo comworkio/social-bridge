@@ -29,7 +29,7 @@ api_x86:
       - docker-compose-build-x86.yml
       - Dockerfile
   tags:
-    - github-changelog
+    - imagesbuilder
 
 api_arm:
   stage: deliver
@@ -48,7 +48,7 @@ api_arm:
       - docker-compose-build-arm.yml
       - Dockerfile.arm
   tags:
-    - buildarm
+    - imagesbuilder
 
 deploy:
   stage: deploy
@@ -66,4 +66,4 @@ deploy:
       - docker-compose-intra.yml
       - Dockerfile
   tags:
-    - github-changelog
+    - twitter-slack
