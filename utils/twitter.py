@@ -1,8 +1,10 @@
+from ast import keyword
 from TwitterSearch import *
 from datetime import datetime
 from utils.common import extract_alphanum, is_empty
 
 import os
+from utils.logger import quiet_log_msg
 
 from utils.slack import slack_messages
 
@@ -44,12 +46,16 @@ def get_usernames():
 def read_tweets():
     tso = TwitterSearchOrder() 
     tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
-    tso.set_keywords(get_keywords())
+    keywords = get_keywords()
     usernames = get_usernames()
+    quiet_log_msg("INFO", "searching tweet from usernames = {}, keywords = {}".format(usernames, keywords))
+    tso.set_keywords(keywords)
     for tweet in get_ts().search_tweets_iterable(tso):
         username = extract_alphanum(tweet['user']['name'])
+        quiet_log_msg("DEBUG", "found tweet from {}".format(username))
         if username not in usernames:
             continue
         timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
-        content = tweet['text']
-        slack_messages("[{}] {}".format(timestamp, content), username, True)
+        content = "[{}] {}".format(timestamp, content)
+        quiet_log_msg("INFO", "found tweet username = {}, content = {}".format(username, content))
+        slack_messages(content, username, True)
