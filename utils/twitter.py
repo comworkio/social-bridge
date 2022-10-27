@@ -43,8 +43,8 @@ def get_usernames():
 
 def read_tweets():
     tso = TwitterSearchOrder() 
-    tso.set_count(os.environ['TWITTER_MAX_RESULTS'])
-    tso.tso.set_keywords(get_keywords())
+    tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
+    tso.set_keywords(get_keywords())
     usernames = get_usernames()
     for tweet in get_ts().search_tweets_iterable(tso):
         username = extract_alphanum(tweet['user']['name'])

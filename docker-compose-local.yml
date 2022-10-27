@@ -1,0 +1,12 @@
+version: "3.3"
+
+services: 
+  twitter-slack:
+    image: comworkio/twitter-slack:latest
+    container_name: twitter-slack
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file: 
+      - .env
+

@@ -16,3 +16,17 @@ A python asynchronous worker which subscribe to twitter account and keywords (li
 ## Image on the dockerhub
 
 The image is available and versioned here: https://hub.docker.com/r/comworkio/twitter-slack
+
+## Getting started locally
+
+```shell
+$ cp .env.dist .env # replace the environment values in this file
+$ docker-compose -f docker-compose-local.yml up --force-recreate
+```
+
+And if you want to change the python sources, don't forget to rebuild:
+
+```shell
+$ cp .env.dist .env # replace the environment values in this file
+$ docker-compose -f docker-compose-local.yml up --force-recreate --build
+```

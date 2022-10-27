@@ -3,7 +3,7 @@ import os
 
 from utils.twitter import read_tweets
 
-WAIT_TIME = os.environ['WAIT_TIME']
+WAIT_TIME = int(os.environ['WAIT_TIME'])
 
 while True:
     read_tweets()
