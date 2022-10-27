@@ -48,7 +48,7 @@ api_arm:
       - docker-compose-build-arm.yml
       - Dockerfile.arm
   tags:
-    - imagesbuilder
+    - buildarm
 
 deploy:
   stage: deploy
