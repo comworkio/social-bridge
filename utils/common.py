@@ -1,3 +1,8 @@
+import re
+
+def extract_alphanum (var):
+    return "".join(re.findall(r'\w+', var))
+
 def is_not_empty (var):
     if (isinstance(var, bool)):
         return var
