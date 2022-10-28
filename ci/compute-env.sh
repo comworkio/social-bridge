@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-export WAIT_TIME=60
 export LOG_LEVEL=INFO
+export WAIT_TIME=60
 export TWITTER_MAX_RESULTS=20
 export TWITTER_KEYWORD_1=techwatch
 export TWITTER_USERNAME_1=IdrissNeumann

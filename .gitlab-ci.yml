@@ -26,6 +26,7 @@ api_x86:
       - requirements.txt
       - ci/docker-deliver.sh
       - ci/deploy.sh
+      - ci/compute-env.sh
       - docker-compose-build-x86.yml
       - docker-compose-intra.yml
       - Dockerfile
@@ -46,6 +47,7 @@ api_arm:
       - requirements.txt
       - ci/docker-deliver.sh
       - ci/deploy.sh
+      - ci/compute-env.sh
       - docker-compose-build-arm.yml
       - docker-compose-intra.yml
       - Dockerfile.arm
@@ -65,6 +67,7 @@ deploy:
       - main.py
       - requirements.txt
       - ci/deploy.sh
+      - ci/compute-env.sh
       - docker-compose-intra.yml
       - Dockerfile
   tags:
