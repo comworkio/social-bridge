@@ -1,6 +1,6 @@
 # Twitter slack
 
-A python asynchronous worker which subscribe to twitter account and hashtags and Slack them.
+A python asynchronous worker which subscribe to twitter account and hashtags and send them to Slack or Discord.
 
 ![slack](./img/slack.png)
 
