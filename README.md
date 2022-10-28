@@ -19,7 +19,11 @@ It also uses redis for storing tweets already processed during 24h (you can conf
 
 The image is available and versioned here: https://hub.docker.com/r/comworkio/twitter-slack
 
-## Getting started locally
+You'll find tags for arm32/aarch64 (optimized for raspberrypi) and x86/amd64 tags:
+
+![tags](./img/tags.png)
+
+## Getting started
 
 ```shell
 $ cp .env.dist .env # replace the environment values in this file
