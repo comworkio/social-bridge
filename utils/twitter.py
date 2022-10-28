@@ -1,10 +1,11 @@
 from ast import keyword
 from TwitterSearch import *
 from datetime import datetime
-from utils.common import extract_username, is_empty
+from utils.common import extract_username, is_empty, is_true
 
 import os
 from utils.logger import quiet_log_msg
+from utils.redis import get_cache_value, set_cache_value
 
 from utils.slack import slack_messages
 
@@ -48,12 +49,14 @@ def stream_keywoards(keyword, usernames):
     for tweet in ts.search_tweets_iterable(tso):
         username = extract_username(tweet['user']['name'])
         quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, from {}".format(keyword, username))
-        if username not in usernames:
+        cache_key = "{}#{}".format(username, tweet['id_str'])
+        if username not in usernames or is_true(get_cache_value(cache_key)):
             continue
         timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
         content = "[{}] {}".format(timestamp, tweet['text'])
         quiet_log_msg("INFO", "[twitter][stream_keywoards] found tweet username = {}, content = {}".format(username, content))
         slack_messages(content, username, True)
+        set_cache_value(cache_key, "true")
 
 def stream_tweets():
     keywords = get_keywords()
