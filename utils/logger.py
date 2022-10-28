@@ -1,6 +1,4 @@
 import os
-import pycurl
-import json
 
 from utils.slack import slack_messages
 from utils.config import get_usernames

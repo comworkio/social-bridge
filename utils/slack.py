@@ -1,6 +1,5 @@
 import os
-import pycurl
-import json
+import requests
 
 from utils.common import is_empty, is_not_empty, is_true
 
@@ -10,23 +9,18 @@ SLACK_TOKEN = os.getenv('SLACK_TOKEN')
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
 SLACK_WEBHOOK_TPL = "https://hooks.slack.com/services/{}"
-DISCORD_WEBHOOK_TPL = "https://discord.com/webhooks/{}/slack"
+DISCORD_WEBHOOK_TPL = "https://discord.com/api/webhooks/{}/slack"
 
 def slack_message ( message , token , username, webhook_tpl):
     if is_true(SLACK_TRIGGER):
-        c = pycurl.Curl()
-        c.setopt(pycurl.URL, webhook_tpl.format(token))
-        c.setopt(pycurl.HTTPHEADER, ['Accept: application/json'])
-        c.setopt(pycurl.POST, 1)
+        url = webhook_tpl.format(token)
         payload = {"text": message, "username": username }
 
         if "discord" not in webhook_tpl:
             payload['channel'] = SLACK_CHANNEL
             payload['icon_emoji'] = ":{}:".format(username)
 
-        data = json.dumps(payload)
-        c.setopt(pycurl.POSTFIELDS, data)
-        c.perform()
+        requests.post(url, json = payload)
 
 def slack_messages( message , username , is_public):
         if is_not_empty(SLACK_TOKEN):
