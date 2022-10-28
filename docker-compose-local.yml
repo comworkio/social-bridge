@@ -17,6 +17,11 @@ services:
     container_name: twitter-slack-redis
     networks:
       - twitter-slack
+    volumes:
+      - twitter-slack-redis-data:/data
+
+volumes:
+  twitter-slack-redis-data:
 
 networks:
   twitter-slack:
