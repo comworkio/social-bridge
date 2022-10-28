@@ -23,25 +23,25 @@ def slack_message ( message , token , username, webhook_tpl):
         requests.post(url, json = payload)
 
 def slack_messages( message , username , is_public):
-        if is_not_empty(SLACK_TOKEN):
-            slack_message(message, SLACK_TOKEN, username, SLACK_WEBHOOK_TPL)
-        
-        if is_not_empty(DISCORD_TOKEN):
-            slack_message(message, DISCORD_TOKEN, username, DISCORD_WEBHOOK_TPL)
+    if is_not_empty(SLACK_TOKEN):
+        slack_message(message, SLACK_TOKEN, username, SLACK_WEBHOOK_TPL)
+    
+    if is_not_empty(DISCORD_TOKEN):
+        slack_message(message, DISCORD_TOKEN, username, DISCORD_WEBHOOK_TPL)
 
-        if is_public:
-            i = 1
-            while True:
-                token_val = os.getenv("SLACK_PUBLIC_TOKEN_{}".format(i))
-                if is_empty(token_val):
-                    break
-                slack_message(message, token_val, username, SLACK_WEBHOOK_TPL)
-                i = i + 1
+    if is_public:
+        i = 1
+        while True:
+            token_val = os.getenv("SLACK_PUBLIC_TOKEN_{}".format(i))
+            if is_empty(token_val):
+                break
+            slack_message(message, token_val, username, SLACK_WEBHOOK_TPL)
+            i = i + 1
 
-            i = 1
-            while True:
-                token_val = os.getenv("DISCORD_PUBLIC_TOKEN_{}".format(i))
-                if is_empty(token_val):
-                    break
-                slack_message(message, token_val, username, DISCORD_WEBHOOK_TPL)
-                i = i+1
+        i = 1
+        while True:
+            token_val = os.getenv("DISCORD_PUBLIC_TOKEN_{}".format(i))
+            if is_empty(token_val):
+                break
+            slack_message(message, token_val, username, DISCORD_WEBHOOK_TPL)
+            i = i+1
