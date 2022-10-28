@@ -13,7 +13,7 @@ def is_not_empty (var):
 
 def is_true (var):
     false_char = ["false", "ko", "no", "off"]
-    return is_empty(var) or not any(c == "{}".format(var).lower() for c in false_char)
+    return is_not_empty(var) and not any(c == "{}".format(var).lower() for c in false_char)
 
 def is_false (var):
     return not is_true(var)

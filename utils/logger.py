@@ -22,4 +22,4 @@ def quiet_log_msg ( log_level, message ):
 def log_msg( log_level, message, is_public = False):
     if check_log_level(log_level):
         quiet_log_msg (log_level, message)
-        slack_messages(message, is_public, get_usernames[0])
+        slack_messages(message, is_public, get_usernames()[0])

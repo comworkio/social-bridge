@@ -25,9 +25,10 @@ def stream_keywoards(keyword, usernames):
     try:
         for tweet in ts.search_tweets_iterable(tso):
             username = extract_alphanum(tweet['user']['name'])
-            quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, from {}".format(keyword, username))
             cache_key = "{}#{}".format(username, tweet['id_str'])
-            if username not in usernames or is_true(get_cache_value(cache_key)):
+            cache_val = get_cache_value(cache_key)
+            quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, cache: {} = {}, from {}".format(keyword, cache_key, cache_val, username))
+            if username not in usernames or is_true(cache_val):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
             content = "[{}] {}".format(timestamp, tweet['text'])
