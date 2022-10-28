@@ -1,6 +1,6 @@
 import re
 
-def extract_username (var):
+def extract_alphanum (var):
     return "".join(re.findall(r'\w+', var)).replace("_", "").lower()
 
 def is_not_empty (var):

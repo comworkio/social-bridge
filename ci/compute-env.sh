@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export WAIT_TIME=20
+export WAIT_TIME=60
 export LOG_LEVEL=INFO
 export TWITTER_MAX_RESULTS=20
 export TWITTER_KEYWORD_1=techwatch
