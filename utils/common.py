@@ -1,7 +1,7 @@
 import re
 
-def extract_alphanum (var):
-    return "".join(re.findall(r'\w+', var))
+def extract_username (var):
+    return "".join(re.findall(r'\w+', var)).replace("_", "").lower()
 
 def is_not_empty (var):
     if (isinstance(var, bool)):
@@ -12,7 +12,7 @@ def is_not_empty (var):
     return var is not None and not any(c == "{}".format(var).lower() for c in empty_chars)
 
 def is_true (var):
-    false_char = ["false", "ko", "no"]
+    false_char = ["false", "ko", "no", "off"]
     return is_empty(var) or not any(c == "{}".format(var).lower() for c in false_char)
 
 def is_false (var):

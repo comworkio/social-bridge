@@ -2,10 +2,14 @@ import os
 import pycurl
 import json
 
-from utils.common import is_empty
+from utils.common import is_empty, is_true
+
+SLACK_TRIGGER = os.environ['SLACK_TRIGGER']
+SLACK_CHANNEL = os.environ['SLACK_CHANNEL']
+SLACK_TOKEN = os.environ['SLACK_TOKEN']
 
 def slack_message ( message , token , username):
-    if SLACK_TRIGGER == 'on':
+    if is_true(SLACK_TRIGGER):
         c = pycurl.Curl()
         c.setopt(pycurl.URL, "https://hooks.slack.com/services/{}".format(token))
         c.setopt(pycurl.HTTPHEADER, ['Accept: application/json'])
@@ -15,7 +19,7 @@ def slack_message ( message , token , username):
         c.perform()
 
 def slack_messages( message , username , is_public):
-        slack_message(message, os.environ['SLACK_TOKEN'], username)
+        slack_message(message, SLACK_TOKEN, username)
         if is_public:
             i = 1
             while True:
