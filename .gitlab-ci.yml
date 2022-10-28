@@ -15,7 +15,7 @@ mirror:
 api_x86:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "x86" "twitter-slack" "1.0"
+    - setsid ./ci/docker-deliver.sh "x86" "twitter-slack" "1.1"
   only:
     refs:
       - /^(main.*)$/
@@ -35,7 +35,7 @@ api_x86:
 api_arm:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "arm" "twitter-slack" "1.0"
+    - setsid ./ci/docker-deliver.sh "arm" "twitter-slack" "1.1"
   only:
     refs:
       - /^(main.*)$/

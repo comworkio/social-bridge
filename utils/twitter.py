@@ -40,19 +40,24 @@ def get_usernames():
         i = i+1
     return usernames
 
-def read_tweets():
+def stream_keywoards(keyword, usernames):
     tso = TwitterSearchOrder() 
     tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
-    keywords = get_keywords()
-    usernames = get_usernames()
-    quiet_log_msg("INFO", "searching tweet from usernames = {}, keywords = {}".format(usernames, keywords))
-    tso.set_keywords(keywords)
+    tso.set_keywords([keyword])
+    
     for tweet in ts.search_tweets_iterable(tso):
         username = extract_username(tweet['user']['name'])
-        quiet_log_msg("DEBUG", "found tweet from {}".format(username))
+        quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, from {}".format(keyword, username))
         if username not in usernames:
             continue
         timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
         content = "[{}] {}".format(timestamp, tweet['text'])
-        quiet_log_msg("INFO", "found tweet username = {}, content = {}".format(username, content))
+        quiet_log_msg("INFO", "[twitter][stream_keywoards] found tweet username = {}, content = {}".format(username, content))
         slack_messages(content, username, True)
+
+def stream_tweets():
+    keywords = get_keywords()
+    usernames = get_usernames()
+    quiet_log_msg("INFO", "[twitter][stream_tweets] searching tweet from usernames = {}, keywords = {}".format(usernames, keywords))
+    for keyword in keywords:
+        stream_keywoards(keyword, usernames)
