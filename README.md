@@ -4,9 +4,17 @@ A python asynchronous worker which subscribe to twitter account and hashtags and
 
 ![slack](./img/slack.png)
 
-It pulls the twitter API every minutes (you can configure the pool period in the [environment variables](./.env.dist)) and filter the result to a list of twitter accounts and hashtags.
+It pulls the twitter API every minutes (you can configure the pool period in the environment's variables) and filter the result to a list of twitter accounts and hashtags.
 
-It also uses redis for storing tweets already processed during 24h (you can configure the TTL in the [environment variables](./.env.dist)).
+It also uses redis for storing tweets already processed during 24h (you can configure the TTL in the environment variables).
+
+## Environment's variables
+
+The variables available are listed in the [.env.dist](./.env.dist) file.
+
+Notes:
+* The difference between `SLACK_TOKEN` and `SLACK_PUBLIC_TOKEN_X` is the following: the errors will also be published with `SLACK_TOKEN`.
+* In order to use discord instead of slack, you just have to replace the variable `SLACK_TOKEN` by `DISCORD_TOKEN` or `SLACK_PUBLIC_TOKEN_X` by `DISCOVER_PUBLIC_TOKEN_X`. You can also use both (you'll have to define all variables).
 
 ## Git repositories
 

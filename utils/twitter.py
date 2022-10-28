@@ -41,7 +41,7 @@ def stream_keywoards(keyword, usernames):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
 
-            content = "[{}] {}".format(timestamp, tweet['text'])
+            content = "At {} - {}".format(timestamp, tweet['text'])
             urls = extractor.find_urls(content)
             if is_not_empty_array(urls):
                 for url in urls:

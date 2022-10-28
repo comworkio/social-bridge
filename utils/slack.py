@@ -2,29 +2,52 @@ import os
 import pycurl
 import json
 
-from utils.common import is_empty, is_true
+from utils.common import is_empty, is_not_empty, is_true
 
 SLACK_TRIGGER = os.environ['SLACK_TRIGGER']
 SLACK_CHANNEL = os.environ['SLACK_CHANNEL']
-SLACK_TOKEN = os.environ['SLACK_TOKEN']
+SLACK_TOKEN = os.getenv('SLACK_TOKEN')
+DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
-def slack_message ( message , token , username):
+SLACK_WEBHOOK_TPL = "https://hooks.slack.com/services/{}"
+DISCORD_WEBHOOK_TPL = "https://discord.com/webhooks/{}/slack"
+
+def slack_message ( message , token , username, webhook_tpl):
     if is_true(SLACK_TRIGGER):
         c = pycurl.Curl()
-        c.setopt(pycurl.URL, "https://hooks.slack.com/services/{}".format(token))
+        c.setopt(pycurl.URL, webhook_tpl.format(token))
         c.setopt(pycurl.HTTPHEADER, ['Accept: application/json'])
         c.setopt(pycurl.POST, 1)
-        data = json.dumps({"text": message, "username": username, "channel": SLACK_CHANNEL, "icon_emoji": ":{}:".format(username) })
+        payload = {"text": message, "username": username }
+
+        if "discord" not in webhook_tpl:
+            payload['channel'] = SLACK_CHANNEL
+            payload['icon_emoji'] = ":{}:".format(username)
+
+        data = json.dumps(payload)
         c.setopt(pycurl.POSTFIELDS, data)
         c.perform()
 
 def slack_messages( message , username , is_public):
-        slack_message(message, SLACK_TOKEN, username)
+        if is_not_empty(SLACK_TOKEN):
+            slack_message(message, SLACK_TOKEN, username, SLACK_WEBHOOK_TPL)
+        
+        if is_not_empty(DISCORD_TOKEN):
+            slack_message(message, DISCORD_TOKEN, username, DISCORD_WEBHOOK_TPL)
+
         if is_public:
             i = 1
             while True:
                 token_val = os.getenv("SLACK_PUBLIC_TOKEN_{}".format(i))
                 if is_empty(token_val):
                     break
-                slack_message(message, token_val, username)
+                slack_message(message, token_val, username, SLACK_WEBHOOK_TPL)
+                i = i + 1
+
+            i = 1
+            while True:
+                token_val = os.getenv("DISCORD_PUBLIC_TOKEN_{}".format(i))
+                if is_empty(token_val):
+                    break
+                slack_message(message, token_val, username, DISCORD_WEBHOOK_TPL)
                 i = i+1
