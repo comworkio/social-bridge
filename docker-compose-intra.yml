@@ -6,3 +6,15 @@ services:
     container_name: twitter-slack
     env_file: 
       - twitter_slack.env
+    networks:
+      - twitter-slack
+  twitter-slack-redis:
+    image: redis:6.2.6
+    restart: always
+    container_name: twitter-slack-redis
+    networks:
+      - twitter-slack
+
+networks:
+  twitter-slack:
+    driver: bridge
