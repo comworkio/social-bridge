@@ -5,6 +5,7 @@ import re
 from TwitterSearch import *
 from datetime import datetime
 from urlextract import URLExtract
+from time import sleep
 
 from utils.common import extract_alphanum, is_not_empty_array, is_true
 
@@ -20,6 +21,8 @@ ts = TwitterSearch (
     access_token = os.environ['TWITTER_ACCESS_TOKEN'],
     access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 )
+
+KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
 
 extractor = URLExtract()
 
@@ -60,3 +63,4 @@ def stream_tweets():
     quiet_log_msg("INFO", "[twitter][stream_tweets] searching tweet from usernames = {}, keywords = {}".format(usernames, keywords))
     for keyword in keywords:
         stream_keywoards(keyword, usernames)
+        sleep(KEYWORD_WAIT_TIME)
