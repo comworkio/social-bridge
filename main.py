@@ -1,5 +1,7 @@
-from time import sleep
 import os
+
+from time import sleep
+
 from utils.logger import quiet_log_msg
 
 from utils.twitter import stream_tweets
