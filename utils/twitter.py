@@ -15,9 +15,6 @@ ts = TwitterSearch (
     access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 )
 
-def get_ts():
-    return ts
-
 def get_keywords():
     i = 1
     keywords = []
@@ -50,7 +47,7 @@ def read_tweets():
     usernames = get_usernames()
     quiet_log_msg("INFO", "searching tweet from usernames = {}, keywords = {}".format(usernames, keywords))
     tso.set_keywords(keywords)
-    for tweet in get_ts().search_tweets_iterable(tso):
+    for tweet in ts.search_tweets_iterable(tso):
         username = extract_alphanum(tweet['user']['name'])
         quiet_log_msg("DEBUG", "found tweet from {}".format(username))
         if username not in usernames:
