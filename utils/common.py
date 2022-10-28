@@ -1,7 +1,16 @@
 import re
 
+def remove_accents(var):
+    rtn = var.lower()
+    rtn = re.sub(r'[àáâãäå]', 'a', rtn)
+    rtn = re.sub(r'[èéêë]', 'e', rtn)
+    rtn = re.sub(r'[ìíîï]', 'i', rtn)
+    rtn = re.sub(r'[òóôõö]', 'o', rtn)
+    rtn = re.sub(r'[ùúûü]', 'u', rtn)
+    return rtn
+
 def extract_alphanum (var):
-    return "".join(re.findall(r'\w+', var)).replace("_", "").lower()
+    return remove_accents("".join(re.findall(r'\w+', var)).replace("_", "").lower())
 
 def is_empty_array(array):
     return array is None or len(array) <= 0 or not any(is_not_empty(elem) for elem in array)
