@@ -3,7 +3,7 @@ import os
 
 from utils.logger import quiet_log_msg
 
-TTL = os.environ['REDIS_TTL']
+TTL = int(os.environ['REDIS_TTL'])
 r = redis.Redis(host=os.environ['REDIS_HOST'], port=int(os.environ['REDIS_PORT']), db=0)
 
 def get_cache_value(key):

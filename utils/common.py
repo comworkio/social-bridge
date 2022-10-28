@@ -3,6 +3,12 @@ import re
 def extract_alphanum (var):
     return "".join(re.findall(r'\w+', var)).replace("_", "").lower()
 
+def is_empty_array(array):
+    return array is None or len(array) <= 0 or not any(is_not_empty(elem) for elem in array)
+
+def is_not_empty_array(array):
+    return not is_empty_array(array)
+
 def is_not_empty (var):
     if (isinstance(var, bool)):
         return var

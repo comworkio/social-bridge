@@ -1,9 +1,11 @@
-from ast import keyword
+import os
+import re
+import requests
+
 from TwitterSearch import *
 from datetime import datetime
-from utils.common import extract_alphanum, is_empty, is_true
+from utils.common import extract_alphanum, is_not_empty_array, is_true
 
-import os
 from utils.config import get_keywords, get_usernames
 from utils.logger import log_msg, quiet_log_msg
 from utils.redis import get_cache_value, set_cache_value
@@ -31,7 +33,17 @@ def stream_keywoards(keyword, usernames):
             if username not in usernames or is_true(cache_val):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
+
             content = "[{}] {}".format(timestamp, tweet['text'])
+            urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', content)
+            if is_not_empty_array(urls):
+                for url in urls:
+                    try:
+                        r = requests.get(url)
+                        content = content.replace(url, r.url)
+                    except Exception as ue:
+                        log_msg("INFO", "[twitter][stream_keywoards] problem finding source url: {}, e = {}".format(url, ue))
+
             quiet_log_msg("INFO", "[twitter][stream_keywoards] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
             set_cache_value(cache_key, "true")
