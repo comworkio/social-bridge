@@ -1,9 +1,11 @@
 import os
-import re
 import requests
+import re
 
 from TwitterSearch import *
 from datetime import datetime
+from urlextract import URLExtract
+
 from utils.common import extract_alphanum, is_not_empty_array, is_true
 
 from utils.config import get_keywords, get_usernames
@@ -18,6 +20,8 @@ ts = TwitterSearch (
     access_token = os.environ['TWITTER_ACCESS_TOKEN'],
     access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
 )
+
+extractor = URLExtract()
 
 def stream_keywoards(keyword, usernames):
     tso = TwitterSearchOrder() 
@@ -35,12 +39,12 @@ def stream_keywoards(keyword, usernames):
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
 
             content = "[{}] {}".format(timestamp, tweet['text'])
-            urls = re.findall('https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', content)
+            urls = extractor.find_urls(content)
             if is_not_empty_array(urls):
                 for url in urls:
                     try:
                         r = requests.get(url)
-                        content = content.replace(url, r.url)
+                        content = content.replace(url, re.sub("\/$", "", r.url))
                     except Exception as ue:
                         log_msg("INFO", "[twitter][stream_keywoards] problem finding source url: {}, e = {}".format(url, ue))
 

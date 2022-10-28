@@ -2,3 +2,4 @@ TwitterSearch
 requests
 pycurl
 redis
+urlextract
