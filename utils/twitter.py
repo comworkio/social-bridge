@@ -29,9 +29,9 @@ extractor = URLExtract()
 def get_tus(tweet):
     tus = []
     if 'name' in tweet['user']:
-        tus.append(tweet['user']['name'])
+        tus.append(extract_alphanum(['user']['name']))
     if 'screen_name' in tweet['user']:
-        tus.append(tweet['user']['screen_name'])
+        tus.append(extract_alphanum(tweet['user']['screen_name']))
     return tus
 
 def stream_keywoards(keyword, usernames):
