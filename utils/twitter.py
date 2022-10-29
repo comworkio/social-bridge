@@ -7,7 +7,7 @@ from datetime import datetime
 from urlextract import URLExtract
 from time import sleep
 
-from utils.common import extract_alphanum, is_not_empty_array, is_true
+from utils.common import extract_alphanum, is_empty_array, is_not_empty_array, is_true
 
 from utils.config import get_keywords, get_usernames
 from utils.logger import log_msg, quiet_log_msg
@@ -26,6 +26,14 @@ KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
 
 extractor = URLExtract()
 
+def get_tus(tweet):
+    tus = []
+    if 'name' in tweet['user']:
+        tus.append(tweet['user']['name'])
+    if 'screen_name' in tweet['user']:
+        tus.append(tweet['user']['screen_name'])
+    return tus
+
 def stream_keywoards(keyword, usernames):
     tso = TwitterSearchOrder() 
     tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
@@ -33,11 +41,16 @@ def stream_keywoards(keyword, usernames):
     
     try:
         for tweet in ts.search_tweets_iterable(tso):
-            username = extract_alphanum(tweet['user']['name'])
+            tus = get_tus(tweet)
+            if is_empty_array(tus):
+                continue
+
+            username = tus[0]
             cache_key = "{}#{}".format(username, tweet['id_str'])
             cache_val = get_cache_value(cache_key)
+            
             quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, cache: {} = {}, from {}".format(keyword, cache_key, cache_val, username))
-            if username not in usernames or is_true(cache_val):
+            if not any(tu in usernames for tu in tus) or is_true(cache_val):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
 
