@@ -35,6 +35,9 @@ def get_tus(tweet):
         tus.append(extract_alphanum(tweet['user']['screen_name']))
     return tus
 
+def diff_in_days(date):
+    return (datetime.now().replace(tzinfo=None) - date.replace(tzinfo=None)).days
+
 def stream_keywoards(keyword, usernames):
     tso = TwitterSearchOrder() 
     tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
@@ -54,7 +57,7 @@ def stream_keywoards(keyword, usernames):
             if not any(tu in usernames for tu in tus) or is_true(cache_val):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y')
-            d = (datetime.now() - timestamp).days
+            d = diff_in_days(timestamp)
             if d >= TWEETS_RETENTION_DAYS:
                 quiet_log_msg("DEBUG", "[twitter][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWEETS_RETENTION_DAYS))
                 continue

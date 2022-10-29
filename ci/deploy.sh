@@ -14,10 +14,11 @@ echo "TWITTER_ACCESS_TOKEN=${TWITTER_ACCESS_TOKEN}" >> ${ENV_FILE}
 echo "TWITTER_ACCESS_TOKEN_SECRET=${TWITTER_ACCESS_TOKEN_SECRET}" >> ${ENV_FILE}
 echo "TWITTER_MAX_RESULTS=${TWITTER_MAX_RESULTS}" >> ${ENV_FILE}
 echo "TWEETS_RETENTION_DAYS=${TWEETS_RETENTION_DAYS}" >> ${ENV_FILE}
+echo "TWITTER_SLACK_VERSION=${TWITTER_SLACK_VERSION}" >> ${ENV_FILE}
 
 env|grep -E "^(TWITTER_KEYWORD|TWITTER_USERNAME|SLACK_PUBLIC_TOKEN|DISCORD_|SLACK_|REDIS_)"|while read -r; do
   echo "${REPLY}" >> "${ENV_FILE}"
 done
 
-docker rmi -f "comworkio/twitter-slack:${UNIQ_VERSION}" || :
+docker rmi -f "comworkio/twitter-slack:${TWITTER_SLACK_VERSION}" || :
 docker-compose -f docker-compose-intra.yml up -d --force-recreate

@@ -2,7 +2,7 @@ version: "3.3"
 
 services: 
   twitter-slack:
-    image: comworkio/twitter-slack:${UNIQ_VERSION}
+    image: comworkio/twitter-slack:${TWITTER_SLACK_VERSION}
     container_name: twitter-slack
     env_file: 
       - twitter_slack.env

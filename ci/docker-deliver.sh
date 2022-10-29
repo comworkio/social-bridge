@@ -30,7 +30,7 @@ COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f "${docker_compose
 echo "${DOCKER_ACCESS_TOKEN}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
 [[ $ARCH == "x86" ]] && tag_and_push "latest" "${IMAGE}"
-[[ $ARCH == "x86" ]] && tag_and_push "${UNIQ_VERSION}" "${IMAGE}"
+[[ $ARCH == "x86" ]] && tag_and_push "${TWITTER_SLACK_VERSION}" "${IMAGE}"
 [[ $ARCH == "x86" ]] && tag_and_push "${VERSION}" "${IMAGE}"
 tag_and_push "latest-${ARCH}" "${IMAGE}"
 tag_and_push "${VERSION}-${ARCH}" "${IMAGE}"
