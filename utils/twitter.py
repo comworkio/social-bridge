@@ -23,6 +23,7 @@ ts = TwitterSearch (
 )
 
 KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
+TWEETS_RETENTION_DAYS = int(os.environ['TWEETS_RETENTION_DAYS'])
 
 extractor = URLExtract()
 
@@ -52,9 +53,13 @@ def stream_keywoards(keyword, usernames):
             quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, cache: {} = {}, from {}".format(keyword, cache_key, cache_val, username))
             if not any(tu in usernames for tu in tus) or is_true(cache_val):
                 continue
-            timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y').isoformat()
+            timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y')
+            d = (datetime.now() - timestamp).days
+            if d >= TWEETS_RETENTION_DAYS:
+                quiet_log_msg("DEBUG", "[twitter][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWEETS_RETENTION_DAYS))
+                continue
 
-            content = "At {} - {}".format(timestamp, tweet['text'])
+            content = "At {} - {}".format(timestamp.isoformat(), tweet['text'])
             urls = extractor.find_urls(content)
             if is_not_empty_array(urls):
                 for url in urls:
