@@ -12,7 +12,7 @@ mirror:
   tags:
     - mirror
 
-api_x86:
+build_x86:
   stage: deliver
   script:
     - setsid ./ci/docker-deliver.sh "x86" "twitter-slack" "2.3"
@@ -33,7 +33,7 @@ api_x86:
   tags:
     - imagesbuilder
 
-api_arm:
+build_arm:
   stage: deliver
   script:
     - setsid ./ci/docker-deliver.sh "arm" "twitter-slack" "2.3"
@@ -70,5 +70,7 @@ deploy:
       - ci/compute-env.sh
       - docker-compose-intra.yml
       - Dockerfile
+  needs: 
+    - build_x86
   tags:
     - twitter-slack
