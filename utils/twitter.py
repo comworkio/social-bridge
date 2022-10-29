@@ -29,7 +29,7 @@ extractor = URLExtract()
 def get_tus(tweet):
     tus = []
     if 'name' in tweet['user']:
-        tus.append(extract_alphanum(['user']['name']))
+        tus.append(extract_alphanum(tweet['user']['name']))
     if 'screen_name' in tweet['user']:
         tus.append(extract_alphanum(tweet['user']['screen_name']))
     return tus
