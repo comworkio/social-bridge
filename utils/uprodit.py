@@ -84,5 +84,8 @@ def send_uprodit(username, message, urls):
     r = requests.post(UPRODIT_NEWSPAPER_API, json = payload, headers = headers)
     if r.status_code == 401:
         uprodit_token = generate_token()
+        if is_empty(uprodit_token):
+            return
+        
         headers = {"Authorization": signature, "x-uprodit-token": uprodit_token}
         requests.post(UPRODIT_NEWSPAPER_API, json = payload, headers = headers)
