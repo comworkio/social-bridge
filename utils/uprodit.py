@@ -1,4 +1,3 @@
-from abc import get_cache_token
 from hashlib import sha1
 from uuid import uuid4
 from time import time
@@ -9,11 +8,10 @@ import hmac
 import re
 import os
 import requests
-import bcrypt
 
 from utils.common import is_empty, is_not_empty, is_not_empty_array, sn_message
 from utils.logger import log_msg
-from utils.redis import set_cache_value
+from utils.redis import get_cache_value, set_cache_value
 
 UPRODIT_API_URL = os.environ['UPRODIT_API_URL']
 UPRODIT_APPID = os.getenv('UPRODIT_APPID')
@@ -43,7 +41,7 @@ def generate_signature (appid, env, uri):
     return "Auth ?auth_signature={}&auth_nonce={}&auth_callback={}&auth_timestamp={}&auth_token={}&auth_signature_method={}&auth_consumer_key={}".format(auth_signature, auth_nonce, auth_callback, auth_timestamp, auth_token, auth_signature_method, auth_consumer_key)
 
 def get_token():
-    token = get_cache_token(UPRODIT_CACHE_TOKEN_KEY)
+    token = get_cache_value(UPRODIT_CACHE_TOKEN_KEY)
     if is_not_empty(token):
         return token
 
