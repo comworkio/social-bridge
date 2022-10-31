@@ -15,6 +15,7 @@ from utils.mastodon import toot
 from utils.redis import get_cache_value, set_cache_value
 
 from utils.slack import slack_messages
+from utils.uprodit import send_uprodit
 
 ts = TwitterSearch (
     consumer_key = os.environ['TWITTER_CONSUMER_KEY'],
@@ -79,6 +80,7 @@ def stream_keywoards(keyword, usernames):
             quiet_log_msg("INFO", "[twitter][stream_keywoards] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
             toot(username, content)
+            send_uprodit(username, content, urls)
             set_cache_value(cache_key, "true")
     except Exception as e:
         log_msg("ERROR", "[twitter][stream_keywoards] unexpected error : {}".format(e))

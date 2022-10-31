@@ -1,7 +1,8 @@
 FROM python:3-alpine
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONIOENCODING=UTF-8
+    PYTHONIOENCODING=UTF-8 \
+    UPRODIT_API_URL=https://api.uprodit.com
 
 COPY . /app/
 
