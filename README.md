@@ -1,16 +1,8 @@
 # Twitter slack
 
-A python asynchronous worker which subscribe to twitter account and hashtags and send them to Slack.
+A python asynchronous worker which subscribe to twitter account and hashtags and send them to [Slack](https://slack.com), [Discord](https://discord.com), [Mastodon](https://mastodon.social) or [Uprodit](https://www.uprodit.com).
 
 ![slack](./img/slack.png)
-
-It's also compatible with Discord:
-
-![discord](./img/discord.png)
-
-And Mastodon:
-
-![mastodon](./img/mastodon.png)
 
 It pulls the twitter API every minutes (you can configure the pool period in the environment's variables) and filter the result to a list of twitter accounts and hashtags.
 
