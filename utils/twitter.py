@@ -7,10 +7,11 @@ from datetime import datetime
 from urlextract import URLExtract
 from time import sleep
 
-from utils.common import extract_alphanum, is_empty_array, is_not_empty_array, is_true
+from utils.common import extract_alphanum, is_empty_array, is_not_empty, is_not_empty_array, is_true
 
 from utils.config import get_keywords, get_usernames
 from utils.logger import log_msg, quiet_log_msg
+from utils.mastodon import toot
 from utils.redis import get_cache_value, set_cache_value
 
 from utils.slack import slack_messages
@@ -24,6 +25,7 @@ ts = TwitterSearch (
 
 KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
 TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
+CACHE_KEY_TPL = "{}#{}"
 
 extractor = URLExtract()
 
@@ -38,6 +40,9 @@ def get_tus(tweet):
 def diff_in_days(date):
     return (datetime.now().replace(tzinfo=None) - date.replace(tzinfo=None)).days
 
+def exists_cache_entry(tus, tweet):
+    return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[0], tweet['id_str']))) or is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[1], tweet['id_str'])))
+
 def stream_keywoards(keyword, usernames):
     tso = TwitterSearchOrder() 
     tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
@@ -46,15 +51,14 @@ def stream_keywoards(keyword, usernames):
     try:
         for tweet in ts.search_tweets_iterable(tso):
             tus = get_tus(tweet)
-            if is_empty_array(tus):
+            if is_empty_array(tus) and len(tus) < 2:
                 continue
 
-            username = tus[0]
-            cache_key = "{}#{}".format(username, tweet['id_str'])
-            cache_val = get_cache_value(cache_key)
+            username = tus[1]
+            cache_key = CACHE_KEY_TPL.format(username, tweet['id_str'])
             
-            quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, cache: {} = {}, from {}".format(keyword, cache_key, cache_val, username))
-            if not any(tu in usernames for tu in tus) or is_true(cache_val):
+            quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, from {}".format(keyword, username))
+            if not any(tu in usernames for tu in tus) or exists_cache_entry(tus, tweet):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y')
             d = diff_in_days(timestamp)
@@ -74,6 +78,7 @@ def stream_keywoards(keyword, usernames):
 
             quiet_log_msg("INFO", "[twitter][stream_keywoards] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
+            toot(username, content)
             set_cache_value(cache_key, "true")
     except Exception as e:
         log_msg("ERROR", "[twitter][stream_keywoards] unexpected error : {}".format(e))
