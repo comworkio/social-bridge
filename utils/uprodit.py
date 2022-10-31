@@ -9,7 +9,7 @@ import re
 import os
 import requests
 
-from utils.common import is_empty, is_not_empty, is_not_empty_array, is_null_property, sn_message
+from utils.common import is_empty, is_not_empty, is_not_empty_array, sn_message
 from utils.logger import log_msg
 from utils.redis import get_cache_value, set_cache_value
 
@@ -41,9 +41,6 @@ def generate_signature (appid, env, uri):
     return "Auth ?auth_signature={}&auth_nonce={}&auth_callback={}&auth_timestamp={}&auth_token={}&auth_signature_method={}&auth_consumer_key={}".format(auth_signature, auth_nonce, auth_callback, auth_timestamp, auth_token, auth_signature_method, auth_consumer_key)
 
 def get_token():
-    if any(is_null_property(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD]):
-        return None
-
     token = get_cache_value(UPRODIT_CACHE_TOKEN_KEY)
     if is_not_empty(token):
         return token
@@ -60,10 +57,7 @@ def get_token():
     return token
 
 def send_uprodit(username, message, urls):
-    if any(is_null_property(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD]):
-        return
-
-    content = sn_message(message)
+    content = sn_message(username, message)
     payload = {"idProfilPost": UPRODIT_PROFILE_ID, "descriptionPost": content}
     uprodit_token = get_token()
 
