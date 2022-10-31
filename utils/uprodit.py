@@ -43,14 +43,7 @@ def generate_signature (appid, env, uri):
 def is_uprodit_disabled():
     return any(is_null_property(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD])
 
-def get_token():
-    if is_uprodit_disabled():
-        return
-
-    token = get_cache_value(UPRODIT_CACHE_TOKEN_KEY)
-    if is_not_empty(token):
-        return token
-
+def generate_token():
     payload = {"username": UPRODIT_USERNAME, "password": UPRODIT_PASSWORD}
     headers = {"Authorization": generate_signature(UPRODIT_APPID, UPRODIT_ENV, UPRODIT_TOKEN_API)}
     r = requests.post(UPRODIT_TOKEN_API, json = payload, headers = headers)
@@ -62,6 +55,16 @@ def get_token():
     set_cache_value(UPRODIT_CACHE_TOKEN_KEY, token)
     return token
 
+def get_token():
+    if is_uprodit_disabled():
+        return
+
+    token = get_cache_value(UPRODIT_CACHE_TOKEN_KEY)
+    if is_not_empty(token):
+        return token
+  
+    return generate_token()
+
 def send_uprodit(username, message, urls):
     if is_uprodit_disabled():
         return
@@ -69,12 +72,17 @@ def send_uprodit(username, message, urls):
     content = sn_message(username, message)
     payload = {"idProfilPost": UPRODIT_PROFILE_ID, "descriptionPost": content}
     uprodit_token = get_token()
-
+    
     if is_empty(uprodit_token):
         return
 
     if is_not_empty_array(urls):
         payload['link'] = urls[0]
 
-    headers = {"Authorization": generate_signature(UPRODIT_APPID, UPRODIT_ENV, UPRODIT_NEWSPAPER_API), "x-uprodit-token": uprodit_token}
-    requests.post(UPRODIT_NEWSPAPER_API, json = payload, headers = headers)
+    signature = generate_signature(UPRODIT_APPID, UPRODIT_ENV, UPRODIT_NEWSPAPER_API)
+    headers = {"Authorization": signature, "x-uprodit-token": uprodit_token}
+    r = requests.post(UPRODIT_NEWSPAPER_API, json = payload, headers = headers)
+    if r.status_code == 401:
+        uprodit_token = generate_token()
+        headers = {"Authorization": signature, "x-uprodit-token": uprodit_token}
+        requests.post(UPRODIT_NEWSPAPER_API, json = payload, headers = headers)
