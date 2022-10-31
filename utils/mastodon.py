@@ -3,7 +3,7 @@ from mastodon import Mastodon
 import os
 import re
 
-from utils.common import is_not_empty
+from utils.common import is_not_empty, sn_message
 
 MASTODON_BASE_URL = os.getenv('MASTODON_BASE_URL')
 MASTODON_ACCESS_TOKEN = os.getenv('MASTODON_ACCESS_TOKEN')
@@ -18,4 +18,4 @@ if is_not_empty(MASTODON_BASE_URL) and is_not_empty(MASTODON_ACCESS_TOKEN):
 
 def toot (username, message):
     if is_not_empty(MASTODON_BASE_URL) and is_not_empty(MASTODON_ACCESS_TOKEN):
-        mastodon.toot(re.sub("^At", "{} at".format(username), message))
+        mastodon.toot(sn_message(username, message))
