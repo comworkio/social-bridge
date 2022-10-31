@@ -23,7 +23,7 @@ ts = TwitterSearch (
 )
 
 KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
-TWEETS_RETENTION_DAYS = int(os.environ['TWEETS_RETENTION_DAYS'])
+TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
 
 extractor = URLExtract()
 
@@ -58,8 +58,8 @@ def stream_keywoards(keyword, usernames):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y')
             d = diff_in_days(timestamp)
-            if d >= TWEETS_RETENTION_DAYS:
-                quiet_log_msg("DEBUG", "[twitter][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWEETS_RETENTION_DAYS))
+            if d >= TWITTER_RETENTION_DAYS:
+                quiet_log_msg("DEBUG", "[twitter][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
                 continue
 
             content = "At {} - {}".format(timestamp.isoformat(), tweet['text'])
