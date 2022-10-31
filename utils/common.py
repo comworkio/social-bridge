@@ -44,3 +44,6 @@ def sn_message(username, message):
 
 def is_not_null_property(property):
     return is_not_empty(property) and "changeit" != property
+
+def is_null_property(property):
+    return not is_not_null_property(property)
