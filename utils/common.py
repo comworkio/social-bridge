@@ -39,8 +39,11 @@ def is_empty (var):
 def is_disabled (var):
     return is_empty(var) or "changeit" == var
 
-def sn_message(username, message):
-    return re.sub("^At", "{} at".format(username), message)
+def sn_message(message):
+    return re.sub("^At [^ ]* -\ *", "", message)
 
 def is_not_null_property(property):
     return is_not_empty(property) and "changeit" != property
+
+def is_null_property(property):
+    return not is_not_null_property(property)
