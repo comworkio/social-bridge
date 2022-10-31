@@ -1,7 +1,7 @@
 import os
 import requests
 
-from utils.common import is_empty, is_not_empty, is_true
+from utils.common import is_empty, is_not_null_property, is_true
 
 SLACK_TRIGGER = os.environ['SLACK_TRIGGER']
 SLACK_CHANNEL = os.environ['SLACK_CHANNEL']
@@ -23,10 +23,10 @@ def slack_message ( message , token , username, webhook_tpl):
         requests.post(url, json = payload)
 
 def slack_messages( message , username , is_public):
-    if is_not_empty(SLACK_TOKEN):
+    if is_not_null_property(SLACK_TOKEN):
         slack_message(message, SLACK_TOKEN, username, SLACK_WEBHOOK_TPL)
     
-    if is_not_empty(DISCORD_TOKEN):
+    if is_not_null_property(DISCORD_TOKEN):
         slack_message(message, DISCORD_TOKEN, username, DISCORD_WEBHOOK_TPL)
 
     if is_public:

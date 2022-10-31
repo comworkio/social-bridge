@@ -6,6 +6,16 @@ from urllib.parse import quote
 
 import hmac
 import re
+import os
+
+UPRODIT_API_URL = os.environ['UPRODIT_API_URL']
+UPRODIT_APPID = os.getenv('UPRODIT_APPID')
+UPRODIT_ENV = os.getenv('UPRODIT_ENV')
+UPRODIT_USERNAME = os.getenv('UPRODIT_USERNAME')
+UPRODIT_PASSWORD = os.getenv('UPRODIT_PASSWORD')
+UPRODIT_PROFILE_ID = os.getenv('UPRODIT_PROFILE_ID')
+
+UPRODIT_NEWSPAPER_API = "{}/v1/post"
 
 def hmacsha1(key, raw):
     hashed = hmac.new(str.encode(key), str.encode(raw), sha1)
@@ -22,4 +32,4 @@ def generate_signature (appid, env, uri):
     auth_timestamp = time()
     return "Auth ?auth_signature={}&auth_nonce={}&auth_callback={}&auth_timestamp={}&auth_token={}&auth_signature_method={}&auth_consumer_key={}".format(auth_signature, auth_nonce, auth_callback, auth_timestamp, auth_token, auth_signature_method, auth_consumer_key)
 
-print(generate_signature("challenge_uprodit", "production", "https://api.uprodit.com/v2/profile/personal/en/51"))
+def send_uprodit(username, message):

@@ -41,3 +41,6 @@ def is_disabled (var):
 
 def sn_message(username, message):
     return re.sub("^At", "{} at".format(username), message)
+
+def is_not_null_property(property):
+    return is_not_empty(property) and "changeit" != property
