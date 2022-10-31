@@ -8,6 +8,10 @@ It's also compatible with Discord:
 
 ![discord](./img/discord.png)
 
+And Mastodon:
+
+![mastodon](./img/mastodon.png)
+
 It pulls the twitter API every minutes (you can configure the pool period in the environment's variables) and filter the result to a list of twitter accounts and hashtags.
 
 It also uses redis for storing tweets already processed during 48h (you can configure the TTL in the environment variables).
