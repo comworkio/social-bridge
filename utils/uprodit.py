@@ -40,8 +40,11 @@ def generate_signature (appid, env, uri):
     auth_timestamp = time()
     return "Auth ?auth_signature={}&auth_nonce={}&auth_callback={}&auth_timestamp={}&auth_token={}&auth_signature_method={}&auth_consumer_key={}".format(auth_signature, auth_nonce, auth_callback, auth_timestamp, auth_token, auth_signature_method, auth_consumer_key)
 
+def is_uprodit_disabled():
+    return any(is_null_property(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD])
+
 def get_token():
-    if any(is_null_property(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD]):
+    if is_uprodit_disabled():
         return
 
     token = get_cache_value(UPRODIT_CACHE_TOKEN_KEY)
@@ -60,7 +63,7 @@ def get_token():
     return token
 
 def send_uprodit(username, message, urls):
-    if any(is_null_property(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD]):
+    if is_uprodit_disabled():
         return
 
     content = sn_message(username, message)
