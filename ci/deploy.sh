@@ -13,7 +13,7 @@ env|grep -E "^(TWITTER_|DISCORD_|SLACK_|REDIS_|MASTODON_|UPRODIT_)"|while read -
   echo "${REPLY}" >> "${ENV_FILE}"
 done
 
-CROSS_ENV_FILE="cross_slack.env"
+CROSS_ENV_FILE="twitter_cross.env"
 echo "" > ${CROSS_ENV_FILE}
 echo "TWITTER_CONSUMER_KEY=${TWITTER_CONSUMER_KEY}" >> ${CROSS_ENV_FILE}
 echo "TWITTER_CONSUMER_SECRET=${TWITTER_CONSUMER_SECRET}" >> ${CROSS_ENV_FILE}
