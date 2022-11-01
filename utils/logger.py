@@ -4,8 +4,6 @@ from utils.slack import slack_messages
 from utils.config import get_usernames
 
 LOG_LEVEL = os.environ['LOG_LEVEL']
-SLACK_TRIGGER = os.environ['SLACK_TRIGGER']
-SLACK_CHANNEL = os.environ['SLACK_CHANNEL']
 
 def check_log_level ( log_level ):
     if LOG_LEVEL == "debug" or LOG_LEVEL == "DEBUG":
