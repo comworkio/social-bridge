@@ -10,7 +10,7 @@ services:
       - twitter-slack
   twitter-cross:
     image: comworkio/twitter-slack:${TWITTER_SLACK_VERSION}
-    container_name: twitter-slack
+    container_name: twitter-cross
     env_file: 
       - twitter_cross.env
     networks:
