@@ -1,7 +1,6 @@
 from mastodon import Mastodon
 
 import os
-import re
 
 from utils.common import is_not_null_property, sn_message
 
