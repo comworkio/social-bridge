@@ -24,7 +24,7 @@ echo "LOG_LEVEL=${LOG_LEVEL}" >> ${CROSS_ENV_FILE}
 echo "WAIT_TIME=${WAIT_TIME}" >> ${CROSS_ENV_FILE}
 echo "KEYWORD_WAIT_TIME=${KEYWORD_WAIT_TIME}" >> ${CROSS_ENV_FILE}
 
-env|grep -E "^(MASTODON_||REDIS_|CROSS_)"|while read -r; do
+env|grep -E "^(MASTODON_|REDIS_|CROSS_)"|while read -r; do
   echo "${REPLY//CROSS_}" >> "${CROSS_ENV_FILE}"
 done
 
