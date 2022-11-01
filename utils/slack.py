@@ -3,8 +3,8 @@ import requests
 
 from utils.common import is_empty, is_not_null_property, is_true
 
-SLACK_TRIGGER = os.environ['SLACK_TRIGGER']
-SLACK_CHANNEL = os.environ['SLACK_CHANNEL']
+SLACK_TRIGGER = os.getenv('SLACK_TRIGGER')
+SLACK_CHANNEL = os.getenv('SLACK_CHANNEL')
 SLACK_TOKEN = os.getenv('SLACK_TOKEN')
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -12,7 +12,7 @@ SLACK_WEBHOOK_TPL = "https://hooks.slack.com/services/{}"
 DISCORD_WEBHOOK_TPL = "https://discord.com/api/webhooks/{}/slack"
 
 def slack_message ( message , token , username, webhook_tpl):
-    if is_true(SLACK_TRIGGER):
+    if is_not_null_property(SLACK_TRIGGER) and is_not_null_property(SLACK_CHANNEL) and is_true(SLACK_TRIGGER):
         url = webhook_tpl.format(token)
         payload = {"text": message, "username": username }
 
