@@ -18,3 +18,6 @@ export REDIS_HOST="twitter-slack-redis"
 export REDIS_PORT=6379
 export REDIS_TTL=172800
 export TWITTER_RETENTION_DAYS=2
+
+export CROSS_TWITTER_USERNAME_1=IdrissNeumann
+export CROSS_TWITTER_KEYWORD_1=cross
