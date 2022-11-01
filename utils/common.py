@@ -36,9 +36,6 @@ def is_false (var):
 def is_empty (var):
     return not is_not_empty(var)
 
-def is_disabled (var):
-    return is_empty(var) or "changeit" == var
-
 def sn_message(username, message):
     return re.sub("^At", "From {} at".format(username), message)
 
