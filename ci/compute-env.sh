@@ -11,6 +11,7 @@ export TWITTER_USERNAME_3=uprodit
 export TWITTER_USERNAME_4=StephaneROBERT
 export TWITTER_USERNAME_5=k33gorg
 export TWITTER_USERNAME_6=OlivierFontannaud
+export TWITTER_OWNER_1=IdrissNeumann
 export SLACK_CHANNEL="#techno-radar"
 export SLACK_TRIGGER=on
 export TWITTER_SLACK_VERSION="${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}"

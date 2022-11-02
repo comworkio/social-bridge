@@ -9,7 +9,7 @@ from time import sleep
 
 from utils.common import extract_alphanum, is_empty_array, is_not_empty, is_not_empty_array, is_true
 
-from utils.config import get_keywords, get_usernames
+from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon import toot
 from utils.redis import get_cache_value, set_cache_value
@@ -44,7 +44,7 @@ def diff_in_days(date):
 def exists_cache_entry(tus, tweet):
     return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[0], tweet['id_str']))) or is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[1], tweet['id_str'])))
 
-def stream_keywoards(keyword, usernames):
+def stream_keywoards(keyword, usernames, owners):
     tso = TwitterSearchOrder() 
     tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
     tso.set_keywords([keyword])
@@ -67,7 +67,11 @@ def stream_keywoards(keyword, usernames):
                 quiet_log_msg("DEBUG", "[twitter][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
                 continue
 
-            content = "At {} - {}".format(timestamp.isoformat(), tweet['text'])
+            if any(tu in owners for tu in tus):
+                content = tweet['text']
+            else:
+                content = "At {} - {}".format(timestamp.isoformat(), tweet['text'])
+            
             urls = extractor.find_urls(content)
             if is_not_empty_array(urls):
                 for url in urls:
@@ -88,7 +92,8 @@ def stream_keywoards(keyword, usernames):
 def stream_tweets():
     keywords = get_keywords()
     usernames = get_usernames()
+    owners = get_owners()
     quiet_log_msg("INFO", "[twitter][stream_tweets] searching tweet from usernames = {}, keywords = {}".format(usernames, keywords))
     for keyword in keywords:
-        stream_keywoards(keyword, usernames)
+        stream_keywoards(keyword, usernames, owners)
         sleep(KEYWORD_WAIT_TIME)
