@@ -22,4 +22,5 @@ export TWITTER_RETENTION_DAYS=2
 
 export CROSS_SLACK_TRIGGER=off
 export CROSS_TWITTER_USERNAME_1=IdrissNeumann
+export CROSS_TWITTER_OWNER_1=IdrissNeumann
 export CROSS_TWITTER_KEYWORD_1=mirrortw
