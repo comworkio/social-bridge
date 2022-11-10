@@ -2,7 +2,6 @@ import os
 import requests
 import re
 
-from TwitterSearch import *
 from datetime import datetime
 from urlextract import URLExtract
 from time import sleep
@@ -16,20 +15,8 @@ from utils.redis import get_cache_value, set_cache_value
 
 from utils.slack import slack_messages
 from utils.stream import is_mastodon_primary_stream
-from utils.twitter.common import is_twitter_enabled
+from utils.twitter.common import _TWITTER_CLIENT, is_twitter_enabled
 from utils.uprodit import send_uprodit
-
-ts = None
-if is_twitter_enabled():
-    try:
-        ts = TwitterSearch (
-            consumer_key = os.getenv('TWITTER_CONSUMER_KEY'),
-            consumer_secret = os.getenv('TWITTER_CONSUMER_SECRET'),
-            access_token = os.getenv('TWITTER_ACCESS_TOKEN'),
-            access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
-        )
-    except Exception as e:
-        log_msg("ERROR", "[twitter][ts] unexpected error : {}".format(e))
 
 KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
 TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
@@ -52,16 +39,13 @@ def exists_cache_entry(tus, tweet):
     return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[0], tweet['id_str']))) or is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[1], tweet['id_str'])))
 
 def stream_keywoards(keyword, usernames, owners):
-    if not is_twitter_enabled() or ts == None:
+    if not is_twitter_enabled() or None == _TWITTER_CLIENT:
         log_msg("DEBUG", "[twitter][stream_keywoards] skipping...")
         return
-
-    tso = TwitterSearchOrder() 
-    tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
-    tso.set_keywords([keyword])
     
     try:
-        for tweet in ts.search_tweets_iterable(tso):
+        tweets = _TWITTER_CLIENT.search_recent_tweets(query=keyword, tweet_fields=['context_annotations', 'created_at'], max_results=int(os.environ['TWITTER_MAX_RESULTS']))
+        for tweet in tweets:
             tus = get_tus(tweet)
             if is_empty_array(tus) and len(tus) < 2:
                 continue
@@ -102,7 +86,7 @@ def stream_keywoards(keyword, usernames, owners):
         log_msg("ERROR", "[twitter][stream_keywoards] unexpected error : {}".format(e))
 
 def stream_tweets():
-    if not is_twitter_enabled() or ts == None:
+    if not is_twitter_enabled() or None == _TWITTER_CLIENT:
         log_msg("DEBUG", "[twitter][stream_tweets] skipping...")
         return
 

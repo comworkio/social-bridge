@@ -1,4 +1,3 @@
-TwitterSearch
 requests
 redis
 urlextract
