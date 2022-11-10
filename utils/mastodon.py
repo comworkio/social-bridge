@@ -16,5 +16,5 @@ if is_not_null_property(MASTODON_BASE_URL) and is_not_null_property(MASTODON_ACC
     )
 
 def toot (username, message):
-    if is_not_null_property(MASTODON_BASE_URL) and is_not_null_property(MASTODON_ACCESS_TOKEN):
+    if is_not_null_property(MASTODON_BASE_URL) and is_not_null_property(MASTODON_ACCESS_TOKEN) and None != mastodon:
         mastodon.toot(sn_message(username, message))

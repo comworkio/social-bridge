@@ -101,6 +101,10 @@ def stream_keywoards(keyword, usernames, owners):
         log_msg("ERROR", "[twitter][stream_keywoards] unexpected error : {}".format(e))
 
 def stream_tweets():
+    if not is_twitter_enabled() or ts == None:
+        log_msg("DEBUG", "[twitter][stream_tweets] skipping...")
+        return
+
     keywords = get_keywords()
     usernames = get_usernames()
     owners = get_owners()
