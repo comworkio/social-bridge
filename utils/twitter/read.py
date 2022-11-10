@@ -38,9 +38,9 @@ def diff_in_days(date):
 def exists_cache_entry(tus, tweet):
     return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[0], tweet['id_str']))) or is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[1], tweet['id_str'])))
 
-def stream_keywoards(keyword, usernames, owners):
+def stream_keywoard(keyword, usernames, owners):
     if not is_twitter_enabled() or None == _TWITTER_CLIENT:
-        log_msg("DEBUG", "[twitter][stream_keywoards] skipping...")
+        log_msg("DEBUG", "[twitter][stream_keywoard] skipping...")
         return
     
     try:
@@ -53,13 +53,13 @@ def stream_keywoards(keyword, usernames, owners):
             username = tus[1]
             cache_key = CACHE_KEY_TPL.format(username, tweet['id_str'])
             
-            quiet_log_msg("DEBUG", "[twitter][stream_keywoards] found tweet with keyword = {}, from {}".format(keyword, username))
+            quiet_log_msg("DEBUG", "[twitter][stream_keywoard] found tweet with keyword = {}, from {}".format(keyword, username))
             if not any(tu in usernames for tu in tus) or exists_cache_entry(tus, tweet):
                 continue
             timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y')
             d = diff_in_days(timestamp)
             if d >= TWITTER_RETENTION_DAYS:
-                quiet_log_msg("DEBUG", "[twitter][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
+                quiet_log_msg("DEBUG", "[twitter][stream_keywoard] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
                 continue
 
             if any(tu in owners for tu in tus):
@@ -74,16 +74,16 @@ def stream_keywoards(keyword, usernames, owners):
                         r = requests.get(url)
                         content = content.replace(url, re.sub("\/$", "", r.url))
                     except Exception as ue:
-                        log_msg("INFO", "[twitter][stream_keywoards] problem finding source url: {}, e = {}".format(url, ue))
+                        log_msg("INFO", "[twitter][stream_keywoard] problem finding source url: {}, e = {}".format(url, ue))
 
-            quiet_log_msg("INFO", "[twitter][stream_keywoards] found tweet username = {}, content = {}".format(username, content))
+            quiet_log_msg("INFO", "[twitter][stream_keywoard] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
             if not is_mastodon_primary_stream():
                 toot(username, content)
             send_uprodit(username, content, urls)
             set_cache_value(cache_key, "true")
     except Exception as e:
-        log_msg("ERROR", "[twitter][stream_keywoards] unexpected error : {}".format(e))
+        log_msg("ERROR", "[twitter][stream_keywoard] unexpected error : {}".format(e))
 
 def stream_tweets():
     if not is_twitter_enabled() or None == _TWITTER_CLIENT:
@@ -95,5 +95,5 @@ def stream_tweets():
     owners = get_owners()
     quiet_log_msg("INFO", "[twitter][stream_tweets] searching tweet from usernames = {}, keywords = {}".format(usernames, keywords))
     for keyword in keywords:
-        stream_keywoards(keyword, usernames, owners)
+        stream_keywoard(keyword, usernames, owners)
         sleep(KEYWORD_WAIT_TIME)
