@@ -11,7 +11,7 @@ WAIT_TIME = int(os.environ['WAIT_TIME'])
 
 log_msg("INFO", "[twitter-slack] deployment of version {} !".format(os.environ['TWITTER_SLACK_VERSION']))
 while True:
-    quiet_log_msg("INFO", "[main] reading tweets, WAIT_TIME = {}".format(WAIT_TIME))
+    quiet_log_msg("INFO", "[main] reading tweets and toots, WAIT_TIME = {}".format(WAIT_TIME))
     stream_tweets()
     stream_toots()
     sleep(WAIT_TIME)
