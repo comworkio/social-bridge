@@ -1,21 +1,6 @@
-from mastodon import Mastodon
-
-import os
-
-from utils.common import is_not_null_property, sn_message
-from utils.mastodon.common import is_mastodon_enabled
-
-MASTODON_BASE_URL = os.getenv('MASTODON_BASE_URL')
-MASTODON_ACCESS_TOKEN = os.getenv('MASTODON_ACCESS_TOKEN')
-
-mastodon = None
-
-if is_mastodon_enabled():
-    mastodon = Mastodon(
-        access_token = MASTODON_ACCESS_TOKEN,
-        api_base_url = MASTODON_BASE_URL
-    )
+from utils.common import sn_message
+from utils.mastodon.common import _MASTODON_CLIENT, is_mastodon_enabled
 
 def toot (username, message):
-    if is_mastodon_enabled() and None != mastodon:
-        mastodon.toot(sn_message(username, message))
+    if is_mastodon_enabled() and None != _MASTODON_CLIENT:
+        _MASTODON_CLIENT.toot(sn_message(username, message))
