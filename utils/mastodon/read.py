@@ -2,7 +2,8 @@ import requests
 import os
 import html2text
 
-from utils.common import is_empty, is_not_empty, is_not_null_property
+from utils.common import extract_alphanum, is_empty, is_not_empty, is_not_null_property
+from utils.config import get_keywords, get_usernames
 from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon.common import MASTODON_BASE_URL
 from utils.redis import set_cache_value
@@ -25,15 +26,21 @@ _H = html2text.HTML2Text()
 _H.ignore_links = True
 
 def format_toot(content):
-    return _H.handle(content).replace("\n", "")
+    return _H.handle(content).replace("\n", " ")
 
-def stream_keyword(keyword):
+def stream_keyword(keyword, usernames):
     r = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
     try:
         toots = r.json()
         for toot in toots:
-            username = toot['account']['username']
+            username = extract_alphanum(toot['account']['username'])
+            if not username in usernames:
+                continue
+
             content = format_toot(toot['content'])
+            if content.startswith("From {} at".format(username)):
+                continue
+
             quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
             #slack_messages(content, username, True)
             #send_uprodit(username, content, urls)
@@ -45,5 +52,7 @@ def stream_toots():
     if is_empty(TIMELINE_TAG_URL):
         log_msg("DEBUG", "[mastodon][stream_toots] skipping...")
         return
-    
-    stream_keyword("techwatch")
+
+    usernames = get_usernames()
+    for keyword in get_keywords():
+        stream_keyword(keyword, usernames)
