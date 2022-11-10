@@ -10,7 +10,9 @@ from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon.common import MASTODON_BASE_URL
 from utils.redis import get_cache_value, set_cache_value
 from utils.slack import slack_messages
+from utils.stream import is_mastodon_primary_stream
 from utils.twitter.read import diff_in_days
+from utils.twitter.write import tweet
 from utils.uprodit import send_uprodit
 
 TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
@@ -68,6 +70,10 @@ def stream_keyword(keyword, usernames, owners):
             quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
             send_uprodit(username, content, _EXTRACTOR.find_urls(content))
+
+            if is_mastodon_primary_stream():
+                tweet(username, content)
+
             set_cache_value(cache_key, "true")
     except Exception as e:
         log_msg("ERROR", "[mastodon][stream_keyword] unexpected error : {}".format(e))
