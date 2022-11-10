@@ -1,10 +1,49 @@
-from utils.logger import log_msg
-from utils.mastodon.common import _MASTODON_CLIENT
-from utils.mastodon.common import is_mastodon_enabled
+import requests
+import os
+import html2text
+
+from utils.common import is_empty, is_not_empty, is_not_null_property
+from utils.logger import log_msg, quiet_log_msg
+from utils.mastodon.common import MASTODON_BASE_URL
+from utils.redis import set_cache_value
+from utils.slack import slack_messages
+from utils.uprodit import send_uprodit
+
+LIMIT = 40
+plimit = os.getenv('TWITTER_MAX_RESULTS')
+if is_not_empty(plimit) and int(plimit) <= LIMIT:
+    LIMIT = int(plimit)
+
+TIMELINE_TAG_URL = None
+if is_not_null_property(MASTODON_BASE_URL):
+    TIMELINE_TAG_URL = "{}/api/v1/timelines/tag".format(MASTODON_BASE_URL)
+
+if is_not_empty(TIMELINE_TAG_URL) and not TIMELINE_TAG_URL.startswith("http"):
+    TIMELINE_TAG_URL = "https://{}".format(TIMELINE_TAG_URL)
+
+_H = html2text.HTML2Text()
+_H.ignore_links = True
+
+def format_toot(content):
+    return _H.handle(content).replace("\n", "")
+
+def stream_keyword(keyword):
+    r = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
+    try:
+        toots = r.json()
+        for toot in toots:
+            username = toot['account']['username']
+            content = format_toot(toot['content'])
+            quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
+            #slack_messages(content, username, True)
+            #send_uprodit(username, content, urls)
+            #set_cache_value(cache_key, "true")
+    except Exception as e:
+        log_msg("ERROR", "[mastodon][stream_keyword] unexpected error : {}".format(e))
 
 def stream_toots():
-    if not is_mastodon_enabled():
+    if is_empty(TIMELINE_TAG_URL):
         log_msg("DEBUG", "[mastodon][stream_toots] skipping...")
         return
-    results = _MASTODON_CLIENT.search("techwatch")
-    log_msg("DEBUG", "[mastodon][stream_toots] results = {}".format(results))
+    
+    stream_keyword("techwatch")

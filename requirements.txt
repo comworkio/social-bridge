@@ -3,3 +3,4 @@ requests
 redis
 urlextract
 Mastodon.py
+html2text
