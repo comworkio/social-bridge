@@ -6,7 +6,7 @@ from datetime import datetime
 from urlextract import URLExtract
 from time import sleep
 
-from utils.common import extract_alphanum, is_empty_array, is_not_empty, is_not_empty_array
+from utils.common import extract_alphanum, is_not_empty, is_not_empty_array
 
 from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
@@ -24,19 +24,11 @@ CACHE_KEY_TPL = "{}#{}"
 
 _EXTRACTOR = URLExtract()
 
-def get_tus(tweet):
-    tus = []
-    if 'name' in tweet['user']:
-        tus.append(extract_alphanum(tweet['user']['name']))
-    if 'screen_name' in tweet['user']:
-        tus.append(extract_alphanum(tweet['user']['screen_name']))
-    return tus
-
 def diff_in_days(date):
     return (datetime.now().replace(tzinfo=None) - date.replace(tzinfo=None)).days
 
-def exists_cache_entry(tus, tweet):
-    return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[0], tweet['id_str']))) or is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[1], tweet['id_str'])))
+def exists_cache_entry(username, tweet):
+    return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(username, tweet['id'])))
 
 def stream_keywoard(keyword, usernames, owners):
     if not is_twitter_enabled() or None == _TWITTER_CLIENT:
@@ -44,25 +36,28 @@ def stream_keywoard(keyword, usernames, owners):
         return
     
     try:
-        tweets = _TWITTER_CLIENT.search_recent_tweets(query=keyword, tweet_fields=['context_annotations', 'created_at'], max_results=int(os.environ['TWITTER_MAX_RESULTS']))
-        for tweet in tweets:
-            tus = get_tus(tweet)
-            if is_empty_array(tus) and len(tus) < 2:
-                continue
-
-            username = tus[1]
-            cache_key = CACHE_KEY_TPL.format(username, tweet['id_str'])
+        tweets = _TWITTER_CLIENT.search_recent_tweets(query=keyword, expansions = "author_id", user_fields = ['username'], tweet_fields=['created_at'], max_results=int(os.environ['TWITTER_MAX_RESULTS']))
+        users = {u["id"]: u for u in tweets.includes['users']}
+        for raw_tweet in tweets.data:
+            username = extract_alphanum(users[raw_tweet.author_id]['username'])
+            tweet = raw_tweet.data
+            cache_key = CACHE_KEY_TPL.format(username, tweet['id'])
             
             quiet_log_msg("DEBUG", "[twitter][stream_keywoard] found tweet with keyword = {}, from {}".format(keyword, username))
-            if not any(tu in usernames for tu in tus) or exists_cache_entry(tus, tweet):
+            if not username in usernames or exists_cache_entry(username, tweet):
                 continue
-            timestamp = datetime.strptime(tweet['created_at'], '%a %b %d %H:%M:%S %z %Y')
+            
+            timestamp = datetime.fromisoformat(tweet['created_at'])
+
+            if tweet['text'].startswith("From {} at".format(username)):
+                continue
+
             d = diff_in_days(timestamp)
             if d >= TWITTER_RETENTION_DAYS:
                 quiet_log_msg("DEBUG", "[twitter][stream_keywoard] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
                 continue
 
-            if any(tu in owners for tu in tus):
+            if username in owners:
                 content = tweet['text']
             else:
                 content = "At {} - {}".format(timestamp.isoformat(), tweet['text'])
