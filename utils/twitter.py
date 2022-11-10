@@ -15,6 +15,7 @@ from utils.mastodon import toot
 from utils.redis import get_cache_value, set_cache_value
 
 from utils.slack import slack_messages
+from utils.stream import is_mastodon_primary_stream
 from utils.uprodit import send_uprodit
 
 def is_twitter_enabled():
@@ -92,7 +93,8 @@ def stream_keywoards(keyword, usernames, owners):
 
             quiet_log_msg("INFO", "[twitter][stream_keywoards] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
-            toot(username, content)
+            if not is_mastodon_primary_stream():
+                toot(username, content)
             send_uprodit(username, content, urls)
             set_cache_value(cache_key, "true")
     except Exception as e:
