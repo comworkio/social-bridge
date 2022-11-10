@@ -14,4 +14,4 @@ if is_twitter_enabled():
 def tweet(username, message):
     if is_twitter_enabled() and None != _api:
         quiet_log_msg("DEBUG", "[twitter][tweet] Send message from {} : {}".format(username, message))
-        _api.update(sn_message(username, message))
+        _api.update_status(sn_message(username, message))
