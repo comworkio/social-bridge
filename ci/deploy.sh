@@ -43,8 +43,8 @@ echo "LOG_LEVEL=${LOG_LEVEL}" >> ${MASTODON_CROSS_ENV_FILE}
 echo "WAIT_TIME=${WAIT_TIME}" >> ${MASTODON_CROSS_ENV_FILE}
 echo "KEYWORD_WAIT_TIME=${KEYWORD_WAIT_TIME}" >> ${MASTODON_CROSS_ENV_FILE}
 
-env|grep -E "^(MASTODON_|REDIS_|MASTODON_CROSS_)"|while read -r; do
-  echo "${REPLY//REVERSE_}" >> "${MASTODON_CROSS_ENV_FILE}"
+env|grep -E "^(MASTODON_|REDIS_|MASTOCROSS_)"|while read -r; do
+  echo "${REPLY//MASTOCROSS_}" >> "${MASTODON_CROSS_ENV_FILE}"
 done
 
 docker rmi -f "comworkio/twitter-slack:${TWITTER_SLACK_VERSION}" || :
