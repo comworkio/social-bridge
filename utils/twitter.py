@@ -19,7 +19,7 @@ from utils.stream import is_mastodon_primary_stream
 from utils.uprodit import send_uprodit
 
 def is_twitter_enabled():
-    return is_not_null_env('TWITTER_CONSUMER_KEY') and is_not_null_env('TWITTER_CONSUMER_SECRET') and is_not_null_env('TWITTER_ACCESS_TOKEN') and is_not_null_env('TWITTER_ACCESS_TOKEN_SECRET')
+    return not any(is_not_null_env(p) for p in ['TWITTER_CONSUMER_KEY', 'TWITTER_CONSUMER_SECRET', 'TWITTER_ACCESS_TOKEN', 'TWITTER_ACCESS_TOKEN_SECRET'])
 
 ts = None
 if is_twitter_enabled():
