@@ -14,7 +14,7 @@ from utils.mastodon.write import toot
 from utils.redis import get_cache_value, set_cache_value
 
 from utils.slack import slack_messages
-from utils.stream import is_mastodon_primary_stream
+from utils.stream import is_twitter_primary_stream
 from utils.twitter.common import _TWITTER_CLIENT, is_twitter_enabled
 from utils.uprodit import send_uprodit
 
@@ -31,7 +31,7 @@ def exists_cache_entry(username, tweet):
     return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(username, tweet['id'])))
 
 def stream_keywoard(keyword, usernames, owners):
-    if not is_twitter_enabled() or None == _TWITTER_CLIENT:
+    if not is_twitter_enabled() or not is_twitter_primary_stream() or None == _TWITTER_CLIENT:
         log_msg("DEBUG", "[twitter][stream_keywoard] skipping...")
         return
     
@@ -73,15 +73,14 @@ def stream_keywoard(keyword, usernames, owners):
 
             quiet_log_msg("INFO", "[twitter][stream_keywoard] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
-            if not is_mastodon_primary_stream():
-                toot(username, content)
+            toot(username, content)
             send_uprodit(username, content, urls)
             set_cache_value(cache_key, "true")
     except Exception as e:
         log_msg("ERROR", "[twitter][stream_keywoard] unexpected error : {}".format(e))
 
 def stream_tweets():
-    if not is_twitter_enabled() or None == _TWITTER_CLIENT:
+    if not is_twitter_enabled() or not is_twitter_primary_stream() or None == _TWITTER_CLIENT:
         log_msg("DEBUG", "[twitter][stream_tweets] skipping...")
         return
 

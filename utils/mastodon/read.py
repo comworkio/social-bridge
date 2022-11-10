@@ -42,6 +42,10 @@ def exists_cache_entry(username, toot):
     return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(username, toot['id'])))
 
 def stream_keyword(keyword, usernames, owners):
+    if not is_mastodon_primary_stream():
+        log_msg("DEBUG", "[mastodon][stream_keywoard] skipping...")
+        return
+
     r = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
     try:
         toots = r.json()
@@ -70,16 +74,14 @@ def stream_keyword(keyword, usernames, owners):
             quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
             slack_messages(content, username, True)
             send_uprodit(username, content, _EXTRACTOR.find_urls(content))
-
-            if is_mastodon_primary_stream():
-                tweet(username, content)
+            tweet(username, content)
 
             set_cache_value(cache_key, "true")
     except Exception as e:
         log_msg("ERROR", "[mastodon][stream_keyword] unexpected error : {}".format(e))
 
 def stream_toots():
-    if is_empty(TIMELINE_TAG_URL):
+    if is_empty(TIMELINE_TAG_URL) or not is_mastodon_primary_stream():
         log_msg("DEBUG", "[mastodon][stream_toots] skipping...")
         return
 
