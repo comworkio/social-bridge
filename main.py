@@ -3,6 +3,7 @@ import os
 from time import sleep
 
 from utils.logger import log_msg, quiet_log_msg
+from utils.mastodon.read import stream_toots
 
 from utils.twitter.read import stream_tweets
 
@@ -12,4 +13,5 @@ log_msg("INFO", "[twitter-slack] deployment of version {} !".format(os.environ['
 while True:
     quiet_log_msg("INFO", "[main] reading tweets, WAIT_TIME = {}".format(WAIT_TIME))
     stream_tweets()
+    stream_toots()
     sleep(WAIT_TIME)

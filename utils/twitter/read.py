@@ -32,7 +32,7 @@ KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
 TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
 CACHE_KEY_TPL = "{}#{}"
 
-extractor = URLExtract()
+_EXTRACTOR = URLExtract()
 
 def get_tus(tweet):
     tus = []
@@ -80,7 +80,7 @@ def stream_keywoards(keyword, usernames, owners):
             else:
                 content = "At {} - {}".format(timestamp.isoformat(), tweet['text'])
             
-            urls = extractor.find_urls(content)
+            urls = _EXTRACTOR.find_urls(content)
             if is_not_empty_array(urls):
                 for url in urls:
                     try:
