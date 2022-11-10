@@ -2,13 +2,17 @@ import requests
 import os
 import html2text
 
+from datetime import datetime
 from utils.common import extract_alphanum, is_empty, is_not_empty, is_not_null_property
 from utils.config import get_keywords, get_usernames
 from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon.common import MASTODON_BASE_URL
 from utils.redis import set_cache_value
 from utils.slack import slack_messages
+from utils.twitter.read import diff_in_days
 from utils.uprodit import send_uprodit
+
+TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
 
 LIMIT = 40
 plimit = os.getenv('TWITTER_MAX_RESULTS')
@@ -39,6 +43,12 @@ def stream_keyword(keyword, usernames):
 
             content = format_toot(toot['content'])
             if content.startswith("From {} at".format(username)):
+                continue
+
+            timestamp = datetime.fromisoformat(toot['created_at'])
+            d = diff_in_days(timestamp)
+            if d >= TWITTER_RETENTION_DAYS:
+                quiet_log_msg("DEBUG", "[mastodon][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
                 continue
 
             quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
