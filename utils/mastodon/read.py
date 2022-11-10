@@ -3,6 +3,7 @@ import os
 import html2text
 
 from datetime import datetime
+from urlextract import URLExtract
 from utils.common import extract_alphanum, is_empty, is_not_empty, is_not_null_property
 from utils.config import get_keywords, get_usernames
 from utils.logger import log_msg, quiet_log_msg
@@ -29,6 +30,8 @@ if is_not_empty(TIMELINE_TAG_URL) and not TIMELINE_TAG_URL.startswith("http"):
 
 _H = html2text.HTML2Text()
 _H.ignore_links = True
+
+_EXTRACTOR = URLExtract()
 
 def format_toot(content):
     return _H.handle(content).replace("\n", " ")
@@ -57,8 +60,8 @@ def stream_keyword(keyword, usernames):
                 continue
 
             quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
-            #slack_messages(content, username, True)
-            #send_uprodit(username, content, urls)
+            slack_messages(content, username, True)
+            send_uprodit(username, content, _EXTRACTOR.find_urls(content))
             set_cache_value(cache_key, "true")
     except Exception as e:
         log_msg("ERROR", "[mastodon][stream_keyword] unexpected error : {}".format(e))
