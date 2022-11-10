@@ -15,7 +15,7 @@ The variables available are listed in the [.env.dist](./.env.dist) file.
 Notes:
 * The difference between `SLACK_TOKEN` and `SLACK_PUBLIC_TOKEN_X` is the following: the errors will also be published with `SLACK_TOKEN`.
 * In order to use discord instead of slack, you just have to replace the variable `SLACK_TOKEN` by `DISCORD_TOKEN` or `SLACK_PUBLIC_TOKEN_X` by `DISCOVER_PUBLIC_TOKEN_X`. You can also use both (you'll have to define all variables).
-* `STREAM_PRIMARY_SRC` indicate the primary source and can take `twitter` or `mastodon` as value (it avoids infinite looping in case you enable both streaming ;) )
+* `STREAM_PRIMARY_SRC` indicate the primary source and can take `twitter` or `mastodon` as value in order to avoid infinite loop (default `twitter`)
 
 ## Git repositories
 
