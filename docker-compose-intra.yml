@@ -15,6 +15,13 @@ services:
       - twitter_cross.env
     networks:
       - twitter-slack
+  mastodon-cross:
+    image: comworkio/twitter-slack:${TWITTER_SLACK_VERSION}
+    container_name: mastodon-cross
+    env_file: 
+      - mastodon_cross.env
+    networks:
+      - twitter-slack
   twitter-slack-redis:
     image: redis:6.2.6
     restart: always
