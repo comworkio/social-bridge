@@ -7,7 +7,7 @@ from datetime import datetime
 from urlextract import URLExtract
 from time import sleep
 
-from utils.common import extract_alphanum, is_empty_array, is_not_empty, is_not_empty_array, is_true
+from utils.common import extract_alphanum, is_empty_array, is_not_empty, is_not_empty_array, is_not_null_env
 
 from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
@@ -17,12 +17,17 @@ from utils.redis import get_cache_value, set_cache_value
 from utils.slack import slack_messages
 from utils.uprodit import send_uprodit
 
-ts = TwitterSearch (
-    consumer_key = os.environ['TWITTER_CONSUMER_KEY'],
-    consumer_secret = os.environ['TWITTER_CONSUMER_SECRET'],
-    access_token = os.environ['TWITTER_ACCESS_TOKEN'],
-    access_token_secret = os.environ['TWITTER_ACCESS_TOKEN_SECRET']
-)
+def is_twitter_enabled():
+    return is_not_null_env('TWITTER_CONSUMER_KEY') and is_not_null_env('TWITTER_CONSUMER_SECRET') and is_not_null_env('TWITTER_ACCESS_TOKEN') and is_not_null_env('TWITTER_ACCESS_TOKEN_SECRET')
+
+ts = None
+if is_twitter_enabled():
+    ts = TwitterSearch (
+        consumer_key = os.getenv('TWITTER_CONSUMER_KEY'),
+        consumer_secret = os.getenv('TWITTER_CONSUMER_SECRET'),
+        access_token = os.getenv('TWITTER_ACCESS_TOKEN'),
+        access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
+    )
 
 KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
 TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
@@ -45,6 +50,10 @@ def exists_cache_entry(tus, tweet):
     return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[0], tweet['id_str']))) or is_not_empty(get_cache_value(CACHE_KEY_TPL.format(tus[1], tweet['id_str'])))
 
 def stream_keywoards(keyword, usernames, owners):
+    if not is_twitter_enabled() or ts == None:
+        log_msg("DEBUG", "[twitter][stream_keywoards] skipping...")
+        return
+
     tso = TwitterSearchOrder() 
     tso.set_count(int(os.environ['TWITTER_MAX_RESULTS']))
     tso.set_keywords([keyword])

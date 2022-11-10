@@ -1,5 +1,7 @@
 import re
 
+import os
+
 def remove_accents(var):
     rtn = var.lower()
     rtn = re.sub(r'[àáâãäå]', 'a', rtn)
@@ -44,3 +46,9 @@ def is_not_null_property(property):
 
 def is_null_property(property):
     return not is_not_null_property(property)
+
+def is_not_null_env(env_key):
+    return is_not_null_property(os.getenv(env_key))
+
+def is_null_env(env_key):
+    return not is_not_null_env(env_key)
