@@ -7,19 +7,17 @@ from datetime import datetime
 from urlextract import URLExtract
 from time import sleep
 
-from utils.common import extract_alphanum, is_empty_array, is_not_empty, is_not_empty_array, is_not_null_env
+from utils.common import extract_alphanum, is_empty_array, is_not_empty, is_not_empty_array
 
 from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
-from utils.mastodon import toot
+from utils.mastodon.write import toot
 from utils.redis import get_cache_value, set_cache_value
 
 from utils.slack import slack_messages
 from utils.stream import is_mastodon_primary_stream
+from utils.twitter.common import is_twitter_enabled
 from utils.uprodit import send_uprodit
-
-def is_twitter_enabled():
-    return not any(is_not_null_env(p) for p in ['TWITTER_CONSUMER_KEY', 'TWITTER_CONSUMER_SECRET', 'TWITTER_ACCESS_TOKEN', 'TWITTER_ACCESS_TOKEN_SECRET'])
 
 ts = None
 if is_twitter_enabled():
