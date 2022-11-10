@@ -5,7 +5,7 @@ import html2text
 from datetime import datetime
 from urlextract import URLExtract
 from utils.common import extract_alphanum, is_empty, is_not_empty, is_not_null_property
-from utils.config import get_keywords, get_usernames
+from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon.common import MASTODON_BASE_URL
 from utils.redis import get_cache_value, set_cache_value
@@ -39,7 +39,7 @@ def format_toot(content):
 def exists_cache_entry(username, toot):
     return is_not_empty(get_cache_value(CACHE_KEY_TPL.format(username, toot['id'])))
 
-def stream_keyword(keyword, usernames):
+def stream_keyword(keyword, usernames, owners):
     r = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
     try:
         toots = r.json()
@@ -54,6 +54,12 @@ def stream_keyword(keyword, usernames):
                 continue
 
             timestamp = datetime.fromisoformat(toot['created_at'])
+
+            if username in owners:
+                content = content
+            else:
+                content = "At {} - {}".format(timestamp.isoformat(), content)
+
             d = diff_in_days(timestamp)
             if d >= TWITTER_RETENTION_DAYS:
                 quiet_log_msg("DEBUG", "[mastodon][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
@@ -72,5 +78,6 @@ def stream_toots():
         return
 
     usernames = get_usernames()
+    owners = get_owners()
     for keyword in get_keywords():
-        stream_keyword(keyword, usernames)
+        stream_keyword(keyword, usernames, owners)
