@@ -21,12 +21,15 @@ from utils.uprodit import send_uprodit
 
 ts = None
 if is_twitter_enabled():
-    ts = TwitterSearch (
-        consumer_key = os.getenv('TWITTER_CONSUMER_KEY'),
-        consumer_secret = os.getenv('TWITTER_CONSUMER_SECRET'),
-        access_token = os.getenv('TWITTER_ACCESS_TOKEN'),
-        access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
-    )
+    try:
+        ts = TwitterSearch (
+            consumer_key = os.getenv('TWITTER_CONSUMER_KEY'),
+            consumer_secret = os.getenv('TWITTER_CONSUMER_SECRET'),
+            access_token = os.getenv('TWITTER_ACCESS_TOKEN'),
+            access_token_secret = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
+        )
+    except Exception as e:
+        log_msg("ERROR", "[twitter][ts] unexpected error : {}".format(e))
 
 KEYWORD_WAIT_TIME = int(os.environ['KEYWORD_WAIT_TIME'])
 TWITTER_RETENTION_DAYS = int(os.environ['TWITTER_RETENTION_DAYS'])
