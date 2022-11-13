@@ -2,21 +2,21 @@ version: "3.3"
 
 services: 
   social-bridge:
-    image: comworkio/social-bridge:${TWITTER_SLACK_VERSION}
+    image: comworkio/social-bridge:${SOCIAL_BRIDGE_VERSION}
     container_name: social-bridge
     env_file: 
       - twitter_slack.env
     networks:
       - social-bridge
   twitter-cross:
-    image: comworkio/social-bridge:${TWITTER_SLACK_VERSION}
+    image: comworkio/social-bridge:${SOCIAL_BRIDGE_VERSION}
     container_name: twitter-cross
     env_file: 
       - twitter_cross.env
     networks:
       - social-bridge
   mastodon-cross:
-    image: comworkio/social-bridge:${TWITTER_SLACK_VERSION}
+    image: comworkio/social-bridge:${SOCIAL_BRIDGE_VERSION}
     container_name: mastodon-cross
     env_file: 
       - mastodon_cross.env
