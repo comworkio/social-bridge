@@ -49,5 +49,6 @@ env|grep -E "^(MASTODON_|REDIS_|MASTOCROSS_)"|while read -r; do
   echo "${REPLY//MASTOCROSS_}" >> "${MASTODON_CROSS_ENV_FILE}"
 done
 
-docker rmi -f "comworkio/twitter-slack:${TWITTER_SLACK_VERSION}" || :
+docker rmi -f "comworkio/social-bridge:${TWITTER_SLACK_VERSION}" || :
+docker ps|awk '($0 ~ "twitter-slack"){system("docker rm -f "$1)}' || :
 docker-compose -f docker-compose-intra.yml up -d --force-recreate

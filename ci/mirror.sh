@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPO_PATH="${PROJECT_HOME}/twitter-slack/"
+REPO_PATH="${PROJECT_HOME}/social-bridge/"
 
 cd "${REPO_PATH}" && git pull origin main || :
 git push github main -f

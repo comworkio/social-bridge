@@ -1,33 +1,33 @@
 version: "3.3"
 
 services: 
-  twitter-slack:
-    image: comworkio/twitter-slack:${TWITTER_SLACK_VERSION}
-    container_name: twitter-slack
+  social-bridge:
+    image: comworkio/social-bridge:${TWITTER_SLACK_VERSION}
+    container_name: social-bridge
     env_file: 
       - twitter_slack.env
     networks:
-      - twitter-slack
+      - social-bridge
   twitter-cross:
-    image: comworkio/twitter-slack:${TWITTER_SLACK_VERSION}
+    image: comworkio/social-bridge:${TWITTER_SLACK_VERSION}
     container_name: twitter-cross
     env_file: 
       - twitter_cross.env
     networks:
-      - twitter-slack
+      - social-bridge
   mastodon-cross:
-    image: comworkio/twitter-slack:${TWITTER_SLACK_VERSION}
+    image: comworkio/social-bridge:${TWITTER_SLACK_VERSION}
     container_name: mastodon-cross
     env_file: 
       - mastodon_cross.env
     networks:
-      - twitter-slack
-  twitter-slack-redis:
+      - social-bridge
+  social-bridge-redis:
     image: redis:6.2.6
     restart: always
-    container_name: twitter-slack-redis
+    container_name: social-bridge-redis
     networks:
-      - twitter-slack
+      - social-bridge
     volumes:
       - twitter-slack-redis-data:/data
 
@@ -35,5 +35,5 @@ volumes:
   twitter-slack-redis-data:
 
 networks:
-  twitter-slack:
+  social-bridge:
     driver: bridge

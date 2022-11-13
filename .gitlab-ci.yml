@@ -15,7 +15,7 @@ mirror:
 build_x86:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "x86" "twitter-slack" "5.1"
+    - setsid ./ci/docker-deliver.sh "x86" "social-bridge" "1.0"
   only:
     refs:
       - /^(main.*)$/
@@ -38,7 +38,7 @@ build_x86:
 build_arm:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "arm" "twitter-slack" "5.1"
+    - setsid ./ci/docker-deliver.sh "arm" "social-bridge" "1.0"
   only:
     refs:
       - /^(main.*)$/
@@ -77,4 +77,4 @@ deploy:
   needs: 
     - build_x86
   tags:
-    - twitter-slack
+    - social-bridge

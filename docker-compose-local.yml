@@ -1,28 +1,28 @@
 version: "3.3"
 
 services: 
-  twitter-slack:
-    image: comworkio/twitter-slack:latest
-    container_name: twitter-slack
+  social-bridge:
+    image: comworkio/social-bridge:latest
+    container_name: social-bridge
     build: 
       context: .
       dockerfile: Dockerfile
     env_file: 
       - .env
     networks:
-      - twitter-slack
-  twitter-slack-redis:
+      - social-bridge
+  social-bridge-redis:
     image: redis:6.2.6
     restart: always
-    container_name: twitter-slack-redis
+    container_name: social-bridge-redis
     networks:
-      - twitter-slack
+      - social-bridge
     volumes:
-      - twitter-slack-redis-data:/data
+      - social-bridge-redis-data:/data
 
 volumes:
-  twitter-slack-redis-data:
+  social-bridge-redis-data:
 
 networks:
-  twitter-slack:
+  social-bridge:
     driver: bridge

@@ -1,4 +1,4 @@
-# Twitter slack
+# Social bridge
 
 A python asynchronous worker which subscribe to twitter or mastodon accounts and hashtags and send them to [Slack](https://slack.com), [Discord](https://discord.com), [Mastodon](https://mastodon.social) or [Uprodit](https://www.uprodit.com).
 
@@ -19,14 +19,14 @@ Notes:
 
 ## Git repositories
 
-* Main repo: https://gitlab.comwork.io/oss/twitter-slack
-* Github mirror: https://github.com/idrissneumann/twitter-slack.git
-* Gitlab mirror: https://gitlab.com/ineumann/twitter-slack.git
-* Froggit mirror: https://lab.frogg.it/ineumann/twitter-slack.git
+* Main repo: https://gitlab.comwork.io/oss/social-bridge
+* Github mirror: https://github.com/idrissneumann/social-bridge.git
+* Gitlab mirror: https://gitlab.com/ineumann/social-bridge.git
+* Froggit mirror: https://lab.frogg.it/ineumann/social-bridge.git
 
 ## Image on the dockerhub
 
-The image is available and versioned here: https://hub.docker.com/r/comworkio/twitter-slack
+The image is available and versioned here: https://hub.docker.com/r/comworkio/social-bridge
 
 You'll find tags for arm32/aarch64 (optimized for raspberrypi) and x86/amd64 tags:
 
