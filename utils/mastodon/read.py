@@ -4,7 +4,7 @@ import html2text
 
 from datetime import datetime
 from urlextract import URLExtract
-from utils.common import extract_alphanum, is_empty, is_not_empty, is_not_null_property
+from utils.common import extract_alphanum, is_empty, is_from_another_account, is_not_empty, is_not_null_property
 from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon.common import MASTODON_BASE_URL
@@ -56,7 +56,7 @@ def stream_keyword(keyword, usernames, owners):
                 continue
 
             content = format_toot(toot['content'])
-            if content.startswith("From {} at".format(username)):
+            if is_from_another_account(content):
                 continue
 
             timestamp = datetime.fromisoformat(toot['created_at'])

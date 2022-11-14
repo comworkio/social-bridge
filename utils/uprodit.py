@@ -9,7 +9,7 @@ import re
 import os
 import requests
 
-from utils.common import is_empty, is_not_empty, is_not_empty_array, is_null_property, sn_message
+from utils.common import is_empty, is_from_another_account, is_not_empty, is_not_empty_array, is_null_property, sn_message
 from utils.logger import log_msg
 from utils.redis import get_cache_value, set_cache_value
 
@@ -66,7 +66,7 @@ def get_token():
     return generate_token()
 
 def send_uprodit(username, message, urls):
-    if is_uprodit_disabled():
+    if is_uprodit_disabled() or is_from_another_account(message):
         return
 
     content = sn_message(username, message)

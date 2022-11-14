@@ -52,3 +52,6 @@ def is_not_null_env(env_key):
 
 def is_null_env(env_key):
     return not is_not_null_env(env_key)
+
+def is_from_another_account(msg):
+    return re.match("^From.* at", msg)

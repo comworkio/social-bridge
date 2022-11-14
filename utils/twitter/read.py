@@ -6,7 +6,7 @@ from datetime import datetime
 from urlextract import URLExtract
 from time import sleep
 
-from utils.common import extract_alphanum, is_not_empty, is_not_empty_array
+from utils.common import extract_alphanum, is_from_another_account, is_not_empty, is_not_empty_array
 
 from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
@@ -49,7 +49,7 @@ def stream_keywoard(keyword, usernames, owners):
             
             timestamp = datetime.fromisoformat(tweet['created_at'])
 
-            if tweet['text'].startswith("From {} at".format(username)):
+            if is_from_another_account(tweet['text']):
                 continue
 
             d = diff_in_days(timestamp)
