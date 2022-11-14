@@ -8,6 +8,7 @@ echo "" > ${ENV_FILE}
 echo "LOG_LEVEL=${LOG_LEVEL}" >> ${ENV_FILE}
 echo "WAIT_TIME=${WAIT_TIME}" >> ${ENV_FILE}
 echo "KEYWORD_WAIT_TIME=${KEYWORD_WAIT_TIME}" >> ${ENV_FILE}
+echo "SOCIAL_BRIDGE_VERSION=${SOCIAL_BRIDGE_VERSION}" >> ${ENV_FILE}
 
 env|grep -E "^(TWITTER_|DISCORD_|SLACK_|REDIS_|MASTODON_|UPRODIT_)"|while read -r; do
   echo "${REPLY}" >> "${ENV_FILE}"
