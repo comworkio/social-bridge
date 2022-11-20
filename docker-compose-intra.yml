@@ -15,10 +15,10 @@ services:
     networks:
       - social-bridge
     volumes:
-      - social-bridge-redis/data
+      - social-bridge-redis:/data
 
 volumes:
-  social-bridge-redis
+  social-bridge-redis:
 
 networks:
   social-bridge:
