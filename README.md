@@ -1,5 +1,7 @@
 # Social bridge
 
+![logo](./img/logo.png)
+
 A python asynchronous worker which subscribe to twitter or mastodon accounts and hashtags and send them to [Slack](https://slack.com), [Discord](https://discord.com), [Mastodon](https://mastodon.social) or [Uprodit](https://www.uprodit.com).
 
 ![slack](./img/slack.png)
