@@ -47,8 +47,8 @@ def stream_keyword(keyword, usernames, owners):
         return
 
     try:
-        r = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
-        toots = r.json()
+        req = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
+        toots = req.json()
         for toot in toots:
             username = extract_alphanum(toot['account']['username'])
             cache_key = CACHE_KEY_TPL.format(username, toot['id'])
