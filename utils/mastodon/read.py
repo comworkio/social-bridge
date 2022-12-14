@@ -46,8 +46,8 @@ def stream_keyword(keyword, usernames, owners):
         log_msg("DEBUG", "[mastodon][stream_keywoard] skipping...")
         return
 
-    r = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
     try:
+        r = requests.get("{}/{}?limit={}".format(TIMELINE_TAG_URL, keyword, LIMIT))
         toots = r.json()
         for toot in toots:
             username = extract_alphanum(toot['account']['username'])
