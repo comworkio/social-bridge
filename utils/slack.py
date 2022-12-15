@@ -20,7 +20,10 @@ def slack_message ( message , token , username, webhook_tpl):
             payload['channel'] = SLACK_CHANNEL
             payload['icon_emoji'] = ":{}:".format(username)
 
-        requests.post(url, json = payload)
+        try:
+            requests.post(url, json = payload)
+        except Exception as e:
+            print("[INFO][slack][slack_message] exception occured posting on this url = {}, e = {}".format(url, e))
 
 def slack_messages( message , username , is_public):
     if is_not_null_property(SLACK_TOKEN):
