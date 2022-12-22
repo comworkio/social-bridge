@@ -46,7 +46,7 @@ def broadcast_messages( message , username , is_public, channel_key):
             i = i + 1
 
         if is_true(DISCORD_ENABLE_MATCHING):
-            token_val = os.getenv("DISCORD_{}_TOKEN".format(channel))
+            token_val = os.getenv("DISCORD_{}_TOKEN".format(channel.upper().replace("-", "")))
             if is_not_empty(token_val):
                 slack_message(message, token_val, username, DISCORD_WEBHOOK_TPL, channel)
         else:
