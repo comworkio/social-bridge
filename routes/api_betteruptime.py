@@ -11,9 +11,13 @@ incident_parser = reqparse.RequestParser()
 incident_parser.add_argument('data', type=dict)
 
 def get_body_val(req, key):
-    if 'data' in req and is_not_empty(req['data']) and key in req['data'] and is_not_empty(req['data'][key]):
-        return str(req['data'][key])
-    elif key in req and is_not_empty(req[key]):
+    if 'data' in req and is_not_empty(req['data']):
+        if 'attributes' in req['data'] and is_not_empty(req['data']['attributes']) and key in req['data']['attributes'] and is_not_empty(req['data']['attributes'][key]):
+            return str(req['data']['attribute'][key])
+        elif key in req['data'] and is_not_empty(req['data'][key]):
+            return str(req['data'][key])
+    
+    if key in req and is_not_empty(req[key]):
         return str(req[key])
     return ""
 
@@ -62,7 +66,7 @@ class BetteruptimeEndPoint(Resource):
             msg = ":scream_cat: [{}] New incident: name = {}, url = {}, cause = {}".format(started_at, name, url, cause)
         
         if not match:
-            log_msg("INFO", "[betteruptime] not sent : req = {}".format(req))
+            log_msg("INFO", "[betteruptime] not sent : msg = {}, req = {}".format(msg, req))
             return {
                 'status': 'ok'
             }
