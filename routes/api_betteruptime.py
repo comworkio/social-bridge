@@ -36,8 +36,6 @@ class BetteruptimeEndPoint(Resource):
         resolved_at = get_body_val(req, 'resolved_at')
         acknowledged_at = get_body_val(req, 'acknowledged_at')
         url = get_body_val(req, 'url')
-        cause = get_body_val(req, 'cause')
-        name = get_body_val(req, 'name')
 
         if is_not_empty(BETTERUPTIME_KEY):
             key = request.headers.get('X-Betteruptime-Key')
@@ -53,20 +51,24 @@ class BetteruptimeEndPoint(Resource):
             domain_match = os.getenv("PROD_DOMAIN_MATCH_{}".format(i))
             if is_empty(domain_match):
                 break
-            match = domain_match.lower() in url.lower() or domain_match.lower() in name.lower()
+            match = domain_match.lower() in url.lower()
             if match:
                 break
             i = i + 1
 
+        args = "url = {}".format(url)
+        for arg in ["http_method", "id", "name", "cause", "response_content", "response_url", "screenshot_url"]:
+            args = "{}, {} = {}".format(args, arg, get_body_val(req, arg))
+
         if is_not_empty(resolved_at):
-            msg = ":smile_cat: [{}] Incident resolved: name = {}, url = {}, cause = {}".format(resolved_at, name, url, cause)
+            msg = ":smile_cat: [{}] Incident resolved: {}".format(resolved_at, args)
         elif is_not_empty(acknowledged_at):
-            msg = ":crying_cat_face: [{}] Incident acknowledged: name = {}, url = {}, cause = {}".format(acknowledged_at, name, url, cause)
+            msg = ":crying_cat_face: [{}] Incident acknowledged: {}".format(acknowledged_at, args)
         else:
-            msg = ":scream_cat: [{}] New incident: name = {}, url = {}, cause = {}".format(started_at, name, url, cause)
+            msg = ":scream_cat: [{}] New incident: {}".format(started_at, args)
         
         if not match:
-            log_msg("INFO", "[betteruptime] not sent : msg = {}, req = {}".format(msg, req))
+            log_msg("INFO", "[betteruptime] not sent : msg = {}".format(msg))
             return {
                 'status': 'ok'
             }
