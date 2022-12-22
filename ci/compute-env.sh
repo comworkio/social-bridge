@@ -16,3 +16,7 @@ export REDIS_PORT=6379
 export REDIS_TTL=172800
 export TWITTER_RETENTION_DAYS=2
 export STREAM_PRIMARY_SRC=mastodon
+export PROD_DOMAIN_MATCH_0="cloud.comwork.io"
+export PROD_DOMAIN_MATCH_1="cloud-api.comwork.io"
+export PROD_DOMAIN_MATCH_2="social-bridge.comwork.io"
+export PROD_DOMAIN_MATCH_3="gitlab.comwork.io"

@@ -1,9 +1,10 @@
+import os
+
 from flask import request
 from flask_restful import Resource, reqparse
 
-from utils.common import is_not_empty
+from utils.common import is_empty, is_not_empty
 from utils.slack import incident_message
-
 
 incident_parser = reqparse.RequestParser()
 incident_parser.add_argument('data', type=dict)
@@ -14,6 +15,8 @@ def get_body_val(req, key):
     elif key in req and is_not_empty(req[key]):
         return str(req[key])
     return None
+
+
 
 class BetteruptimeEndPoint(Resource):
     def post(self):
@@ -27,6 +30,22 @@ class BetteruptimeEndPoint(Resource):
         cause = get_body_val(req, 'cause')
         name = get_body_val(req, 'name')
 
+        i = 1
+        match = False
+        while True:
+            domain_match = os.getenv("INCIDENT_DOMAIN_MATCH_{}".format(i))
+            if is_empty(domain_match):
+                break
+            match = domain_match.lower() in url.lower() or domain_match.lower() in name.lower()
+            if match:
+                break
+            i = i+1
+
+        if not match:
+            return {
+                'status': 'ok'
+            }
+
         if is_not_empty(resolved_at):
             msg = ":smile_cat: [{}] Incident resolved: name = {}, url = {}, cause = {}".format(resolved_at, name, url, cause)
         elif is_not_empty(acknowledged_at):
@@ -38,4 +57,3 @@ class BetteruptimeEndPoint(Resource):
         return {
             'status': 'ok'
         }
-
