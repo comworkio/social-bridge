@@ -73,7 +73,7 @@ class BetteruptimeEndPoint(Resource):
                 'status': 'ok'
             }
 
-        incident_message(PROD_USERNAME, msg)
+        incident_message(msg, PROD_USERNAME)
         return {
             'status': 'ok'
         }
