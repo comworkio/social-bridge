@@ -66,3 +66,11 @@ $ curl localhost:8080/v1/health
 $ curl localhost:8080/v1/manifest 
 {"version": "1.0", "sha": "1c7cb1f", "arch": "x86"}
 ```
+
+### Betteruptime
+
+This is a webhook for [betteruptime](https://betteruptime.com) incidents:
+
+```shell
+curl -X POST localhost:8080/v1/betteruptime -d '{"data":{"name": "cwcloud", "url":"https://cloud.comwork.io","cause": "not responding", "started_at": "2022-12-22T06:19:57.802Z"}}'
+```

@@ -11,6 +11,8 @@ incident_parser.add_argument('data', type=dict)
 def get_body_val(req, key):
     if 'data' in req and is_not_empty(req['data']) and key in req['data'] and is_not_empty(req['data'][key]):
         return str(req['data'][key])
+    elif key in req and is_not_empty(req[key]):
+        return str(req[key])
     return None
 
 class BetteruptimeEndPoint(Resource):
@@ -23,14 +25,17 @@ class BetteruptimeEndPoint(Resource):
         acknowledged_at = get_body_val(req, 'acknowledged_at')
         url = get_body_val(req, 'url')
         cause = get_body_val(req, 'cause')
+        name = get_body_val(req, 'name')
 
         if is_not_empty(resolved_at):
-            msg = ":smile_cat: [{}] Incident resolved: name = {}, url = {}, cause = {}".format(resolved_at, url, cause)
+            msg = ":smile_cat: [{}] Incident resolved: name = {}, url = {}, cause = {}".format(resolved_at, name, url, cause)
         elif is_not_empty(acknowledged_at):
-            msg = ":crying_cat_face: [{}] Incident acknowledged: name = {}, url = {}, cause = {}".format(acknowledged_at, url, cause)
+            msg = ":crying_cat_face: [{}] Incident acknowledged: name = {}, url = {}, cause = {}".format(acknowledged_at, name, url, cause)
         else:
-            msg = ":scream_cat: [{}] New incident: name = {}, url = {}, cause = {}".format(started_at, url, cause)
+            msg = ":scream_cat: [{}] New incident: name = {}, url = {}, cause = {}".format(started_at, name, url, cause)
         
         incident_message('betteruptime', msg)
+        return {
+            'status': 'ok'
+        }
 
-        
