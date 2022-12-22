@@ -5,6 +5,10 @@ FROM balenalib/raspberrypi3-debian:${BALENA_DEBIAN_TAG}@${BALENA_DEBIAN_DIGEST}
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONIOENCODING=UTF-8 \
+    FLASK_APP=/api.py \
+    FLASK_RUN_HOST=0.0.0.0 \
+    FLASK_RUN_PORT=8080 \
+    MANIFEST_FILE_PATH=/app/manifest.json \
     UPRODIT_API_URL=https://api.uprodit.com
 
 COPY . /app/
@@ -17,4 +21,4 @@ RUN apt-get update -y && \
     pip3 install -r requirements.txt && \
     rm -rf /var/lib/apt/lists/*
 
-CMD [ "python3", "/app/main.py" ]
+CMD ["python3", "-m", "flask", "run"]
