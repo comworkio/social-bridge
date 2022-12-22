@@ -15,9 +15,11 @@ manifest_routes = ['/manifest', '/manifest/', '/v1/manifest', '/v1/manifest/']
 api.add_resource(RootEndPoint, *health_check_routes)
 api.add_resource(ManifestEndPoint, *manifest_routes)
 
+async_process = Process( 
+    target=bridge,
+    daemon=True
+)
+async_process.start()
+
 if __name__ == '__main__':
-    async_process = Process( 
-        target=bridge,
-        daemon=True
-    )
     app.run()

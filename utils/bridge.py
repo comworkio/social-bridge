@@ -12,7 +12,7 @@ WAIT_TIME = int(os.environ['WAIT_TIME'])
 def bridge():
     log_msg("INFO", "[social-bridge] deployment of version {} !".format(os.environ['SOCIAL_BRIDGE_VERSION']))
     while True:
-        quiet_log_msg("INFO", "[main] reading tweets and toots, WAIT_TIME = {}".format(WAIT_TIME))
+        quiet_log_msg("INFO", "[bridge] reading tweets and toots, WAIT_TIME = {}".format(WAIT_TIME))
         stream_tweets()
         stream_toots()
         sleep(WAIT_TIME)
