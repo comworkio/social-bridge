@@ -58,7 +58,9 @@ class BetteruptimeEndPoint(Resource):
 
         args = "url = {}".format(url)
         for arg in ["http_method", "id", "name", "cause", "response_content", "response_url", "screenshot_url"]:
-            args = "{}, {} = {}".format(args, arg, get_body_val(req, arg))
+            val = get_body_val(req, arg)
+            if is_not_empty(val):
+                args = "{}, {} = {}".format(args, arg, val)
 
         if is_not_empty(resolved_at):
             msg = ":smile_cat: [{}] Incident resolved: {}".format(resolved_at, args)
