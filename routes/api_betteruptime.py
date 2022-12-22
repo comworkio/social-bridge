@@ -13,7 +13,7 @@ incident_parser.add_argument('data', type=dict)
 def get_body_val(req, key):
     if 'data' in req and is_not_empty(req['data']):
         if 'attributes' in req['data'] and is_not_empty(req['data']['attributes']) and key in req['data']['attributes'] and is_not_empty(req['data']['attributes'][key]):
-            return str(req['data']['attribute'][key])
+            return str(req['data']['attributes'][key])
         elif key in req['data'] and is_not_empty(req['data'][key]):
             return str(req['data'][key])
     
