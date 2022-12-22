@@ -4,6 +4,7 @@ from flask import request
 from flask_restful import Resource, reqparse
 
 from utils.common import is_empty, is_not_empty
+from utils.logger import log_msg
 from utils.slack import incident_message
 
 incident_parser = reqparse.RequestParser()
@@ -35,18 +36,13 @@ class BetteruptimeEndPoint(Resource):
         i = 1
         match = False
         while True:
-            domain_match = os.getenv("INCIDENT_DOMAIN_MATCH_{}".format(i))
+            domain_match = os.getenv("PROD_DOMAIN_MATCH_{}".format(i))
             if is_empty(domain_match):
                 break
             match = domain_match.lower() in url.lower() or domain_match.lower() in name.lower()
             if match:
                 break
-            i = i+1
-
-        if not match:
-            return {
-                'status': 'ok'
-            }
+            i = i + 1
 
         if is_not_empty(resolved_at):
             msg = ":smile_cat: [{}] Incident resolved: name = {}, url = {}, cause = {}".format(resolved_at, name, url, cause)
@@ -55,6 +51,12 @@ class BetteruptimeEndPoint(Resource):
         else:
             msg = ":scream_cat: [{}] New incident: name = {}, url = {}, cause = {}".format(started_at, name, url, cause)
         
+        if not match:
+            log_msg("INFO", "[betteruptime] not sending this message: {}".format(msg))
+            return {
+                'status': 'ok'
+            }
+
         incident_message(PROD_USERNAME, msg)
         return {
             'status': 'ok'

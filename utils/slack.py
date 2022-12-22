@@ -50,7 +50,7 @@ def broadcast_messages( message , username , is_public, channel_key):
             if is_empty(token_val):
                 break
             slack_message(message, token_val, username, DISCORD_WEBHOOK_TPL, channel)
-            i = i+1
+            i = i + 1
 
 def slack_messages( message , username , is_public):
     return broadcast_messages(message, username, is_public, 'SLACK_CHANNEL')
