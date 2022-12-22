@@ -15,7 +15,7 @@ def get_body_val(req, key):
         return str(req['data'][key])
     elif key in req and is_not_empty(req[key]):
         return str(req[key])
-    return None
+    return ""
 
 PROD_USERNAME = os.getenv('PROD_USERNAME')
 if is_empty(PROD_USERNAME):
