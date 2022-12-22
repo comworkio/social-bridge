@@ -21,6 +21,8 @@ PROD_USERNAME = os.getenv('PROD_USERNAME')
 if is_empty(PROD_USERNAME):
     PROD_USERNAME = 'betteruptime'
 
+BETTERUPTIME_KEY = os.getenv('BETTERUPTIME_KEY')
+
 class BetteruptimeEndPoint(Resource):
     def post(self):
         request.get_json(force=True)
@@ -32,6 +34,14 @@ class BetteruptimeEndPoint(Resource):
         url = get_body_val(req, 'url')
         cause = get_body_val(req, 'cause')
         name = get_body_val(req, 'name')
+
+        if is_not_empty(BETTERUPTIME_KEY):
+            key = request.headers.get('X-Betteruptime-Key')
+            if BETTERUPTIME_KEY != key:
+                return {
+                    'status': 'authentication_failure',
+                    'reason': 'Not the right key passed as header'
+                }, 401
 
         i = 1
         match = False
@@ -52,7 +62,7 @@ class BetteruptimeEndPoint(Resource):
             msg = ":scream_cat: [{}] New incident: name = {}, url = {}, cause = {}".format(started_at, name, url, cause)
         
         if not match:
-            log_msg("INFO", "[betteruptime] not sending this message: {}".format(msg))
+            log_msg("INFO", "[betteruptime] not sent : req = {}".format(req))
             return {
                 'status': 'ok'
             }
