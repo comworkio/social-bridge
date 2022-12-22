@@ -10,6 +10,8 @@ It pulls the twitter API every minutes (you can configure the pool period in the
 
 It also uses redis for storing tweets already processed during 48h (you can configure the TTL in the environment variables).
 
+This worker also provide a Restful API for monitoring purpose.
+
 ## Environment's variables
 
 The variables available are listed in the [.env.dist](./.env.dist) file.
@@ -47,4 +49,20 @@ And if you want to change the python sources, don't forget to rebuild:
 ```shell
 $ cp .env.dist .env # replace the environment values in this file
 $ docker-compose -f docker-compose-local.yml up --force-recreate --build
+```
+
+## Restful API
+
+### Healthcheck
+
+```shell
+$ curl localhost:8080/v1/health
+{"status": "ok", "alive": true}
+```
+
+### Manifests
+
+```shell
+$ curl localhost:8080/v1/manifest 
+{"version": "1.0", "sha": "1c7cb1f", "arch": "x86"}
 ```
