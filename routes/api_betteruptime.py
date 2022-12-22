@@ -16,7 +16,9 @@ def get_body_val(req, key):
         return str(req[key])
     return None
 
-
+PROD_USERNAME = os.getenv('PROD_USERNAME')
+if is_empty(PROD_USERNAME):
+    PROD_USERNAME = 'betteruptime'
 
 class BetteruptimeEndPoint(Resource):
     def post(self):
@@ -53,7 +55,7 @@ class BetteruptimeEndPoint(Resource):
         else:
             msg = ":scream_cat: [{}] New incident: name = {}, url = {}, cause = {}".format(started_at, name, url, cause)
         
-        incident_message('betteruptime', msg)
+        incident_message(PROD_USERNAME, msg)
         return {
             'status': 'ok'
         }
