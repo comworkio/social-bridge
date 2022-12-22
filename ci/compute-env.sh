@@ -9,6 +9,7 @@ export TWITTER_KEYWORD_2=mirrortw
 export TWITTER_USERNAME_1=IdrissNeumann
 export TWITTER_OWNER_1=IdrissNeumann
 export SLACK_CHANNEL="#techno-radar"
+export PROD_CHANNEL="#cwcloud-alert"
 export SLACK_TRIGGER=on
 export SOCIAL_BRIDGE_VERSION="${CI_COMMIT_BRANCH}-${CI_COMMIT_SHORT_SHA}"
 export REDIS_HOST="social-bridge-redis"
