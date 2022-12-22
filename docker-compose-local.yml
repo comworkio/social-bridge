@@ -11,6 +11,8 @@ services:
       - .env
     networks:
       - social-bridge
+    ports:
+      - 8082:8080
   social-bridge-redis:
     image: redis:6.2.6
     restart: always
