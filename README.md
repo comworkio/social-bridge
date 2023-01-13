@@ -27,7 +27,6 @@ Notes:
 * Main repo: https://gitlab.comwork.io/oss/social-bridge
 * Github mirror: https://github.com/idrissneumann/social-bridge.git
 * Gitlab mirror: https://gitlab.com/ineumann/social-bridge.git
-* Froggit mirror: https://lab.frogg.it/ineumann/social-bridge.git
 
 ## Image on the dockerhub
 
