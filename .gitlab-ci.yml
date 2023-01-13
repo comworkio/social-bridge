@@ -24,7 +24,8 @@ build_x86:
       - utils/*
       - utils/mastodon/*
       - utils/twitter/*
-      - main.py
+      - routes/*
+      - api.py
       - requirements.txt
       - ci/docker-deliver.sh
       - ci/deploy.sh
@@ -47,7 +48,8 @@ build_arm:
       - utils/*
       - utils/mastodon/*
       - utils/twitter/*
-      - main.py
+      - routes/*
+      - api.py
       - requirements.txt
       - ci/docker-deliver.sh
       - ci/deploy.sh
