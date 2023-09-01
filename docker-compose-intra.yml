@@ -3,6 +3,7 @@ version: "3.3"
 services: 
   social-bridge:
     image: comworkio/social-bridge:${SOCIAL_BRIDGE_VERSION}
+    restart: always
     container_name: social-bridge
     env_file: 
       - twitter_slack.env
