@@ -13,7 +13,7 @@ from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon.write import toot
 from utils.redis import get_cache_value, set_cache_value
 
-from utils.slack import slack_messages
+from utils.notif import notif_messages
 from utils.stream import is_twitter_primary_stream
 from utils.twitter.common import _TWITTER_CLIENT, is_twitter_enabled
 from utils.uprodit import send_uprodit
@@ -72,7 +72,7 @@ def stream_keywoard(keyword, usernames, owners):
                         log_msg("INFO", "[twitter][stream_keywoard] problem finding source url: {}, e = {}".format(url, ue))
 
             quiet_log_msg("INFO", "[twitter][stream_keywoard] found tweet username = {}, content = {}".format(username, content))
-            slack_messages(content, username, True)
+            notif_messages(content, username, True)
             toot(username, content)
             send_uprodit(username, content, urls)
             set_cache_value(cache_key, "true")

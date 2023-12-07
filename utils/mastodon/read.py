@@ -9,7 +9,7 @@ from utils.config import get_keywords, get_owners, get_usernames
 from utils.logger import log_msg, quiet_log_msg
 from utils.mastodon.common import MASTODON_BASE_URL
 from utils.redis import get_cache_value, set_cache_value
-from utils.slack import slack_messages
+from utils.notif import notif_messages
 from utils.stream import is_mastodon_primary_stream
 from utils.twitter.read import diff_in_days
 from utils.twitter.write import tweet
@@ -72,7 +72,7 @@ def stream_keyword(keyword, usernames, owners):
                 continue
 
             quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
-            slack_messages(content, username, True)
+            notif_messages(content, username, True)
             send_uprodit(username, content, _EXTRACTOR.find_urls(content))
             tweet(username, content)
 
