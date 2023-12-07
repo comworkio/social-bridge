@@ -78,7 +78,7 @@ class BetteruptimeEndPoint(Resource):
             payload['title'] = ":scream_cat: New incident"
 
         if not match:
-            log_msg("INFO", "[betteruptime] not sent : msg = {}".format(payload['msg']))
+            log_msg("INFO", "[betteruptime] not sent : msg = {}".format(payload['message']))
             return {
                 'status': 'ok'
             }
