@@ -62,20 +62,28 @@ class BetteruptimeEndPoint(Resource):
             if is_not_empty(val):
                 args = "{}, {} = {}".format(args, arg, val)
 
+        payload = dict()
+        payload['username'] = PROD_USERNAME
         if is_not_empty(resolved_at):
-            msg = ":smile_cat: [{}] Incident resolved: {}".format(resolved_at, args)
+            payload['message'] = "Resolved at {}: {}".format(resolved_at, args)
+            payload['color'] = "#10A37F"
+            payload['title'] = ":smile_cat: Incident resolved"
         elif is_not_empty(acknowledged_at):
-            msg = ":crying_cat_face: [{}] Incident acknowledged: {}".format(acknowledged_at, args)
+            payload['message'] = "Acknowledged at {}: {}".format(acknowledged_at, args)
+            payload['color'] = "#D4D5D7"
+            payload['title'] = ":crying_cat_face: Incident acknowledged"
         else:
-            msg = ":scream_cat: [{}] New incident: {}".format(started_at, args)
-        
+            payload['message'] = "New incident at {}: {}".format(started_at, args)
+            payload['color'] = "#D80020"
+            payload['title'] = ":scream_cat: New incident"
+
         if not match:
-            log_msg("INFO", "[betteruptime] not sent : msg = {}".format(msg))
+            log_msg("INFO", "[betteruptime] not sent : msg = {}".format(payload['msg']))
             return {
                 'status': 'ok'
             }
 
-        incident_message(msg, PROD_USERNAME)
+        incident_message(payload)
         return {
             'status': 'ok'
         }

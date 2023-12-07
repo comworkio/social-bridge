@@ -72,7 +72,7 @@ def stream_keywoard(keyword, usernames, owners):
                         log_msg("INFO", "[twitter][stream_keywoard] problem finding source url: {}, e = {}".format(url, ue))
 
             quiet_log_msg("INFO", "[twitter][stream_keywoard] found tweet username = {}, content = {}".format(username, content))
-            notif_messages(content, username, True)
+            notif_messages({ "message": content, "username": username }, True)
             toot(username, content)
             send_uprodit(username, content, urls)
             set_cache_value(cache_key, "true")

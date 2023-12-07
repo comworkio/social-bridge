@@ -72,7 +72,7 @@ def stream_keyword(keyword, usernames, owners):
                 continue
 
             quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
-            notif_messages(content, username, True)
+            notif_messages({ "message": content, "username": username }, True)
             send_uprodit(username, content, _EXTRACTOR.find_urls(content))
             tweet(username, content)
 
