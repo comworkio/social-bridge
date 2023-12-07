@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export LOG_LEVEL=DEBUG
+export LOG_LEVEL=INFO
 export WAIT_TIME=60
 export KEYWORD_WAIT_TIME=2
 export TWITTER_MAX_RESULTS=100
@@ -24,5 +24,7 @@ export PROD_DOMAIN_MATCH_4="test.com"
 export PROD_DOMAIN_MATCH_5="portainer.comwork.io"
 export PROD_DOMAIN_MATCH_6="storage-bridge.comwork.io"
 export PROD_DOMAIN_MATCH_7="cwcloud.tn"
+export SLACK_CHANNEL="#techno-radar"
+export PROD_CHANNEL="#cwcloud-alert"
 export DISCORD_TECHNORADAR_TOKEN="${DISCORD_PUBLIC_TOKEN_1}"
 export DISCORD_CWCLOUDALERT_TOKEN="${DISCORD_PUBLIC_TOKEN_2}"

@@ -41,14 +41,14 @@ def is_empty (var):
 def sn_message(username, message):
     return re.sub("^At", "From {} at".format(username), message)
 
-def is_not_null_property(property):
-    return is_not_empty(property) and "changeit" != property
+def is_disabled (var):
+    return is_empty(var) or "changeit" == var
 
-def is_null_property(property):
-    return not is_not_null_property(property)
+def is_enabled(var):
+    return not is_disabled(var)
 
 def is_not_null_env(env_key):
-    return is_not_null_property(os.getenv(env_key))
+    return is_enabled(os.getenv(env_key))
 
 def is_null_env(env_key):
     return not is_not_null_env(env_key)
@@ -56,8 +56,3 @@ def is_null_env(env_key):
 def is_from_another_account(msg):
     return re.match("^From.* at", msg)
 
-def is_disabled (var):
-    return is_empty(var) or "changeit" == var
-
-def is_enabled(var):
-    return not is_disabled(var)

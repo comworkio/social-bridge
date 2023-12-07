@@ -1,7 +1,7 @@
 import os
 import requests
 
-from utils.common import is_empty, is_not_empty, is_not_null_property, is_null_property, is_true
+from utils.common import is_disabled, is_empty, is_enabled, is_not_empty, is_true
 from utils.logger import DISCORD_WEBHOOK_TPL, SLACK_WEBHOOK_TPL, is_notif_enabled, log_msg
 
 SLACK_TRIGGER = os.getenv('SLACK_TRIGGER')
@@ -50,13 +50,14 @@ def notif_message(payload, token, webhook_tpl, channel):
 
 def broadcast_messages(payload, is_public, channel_key):
     channel = os.getenv(channel_key)
-    if is_null_property(channel):
+    if is_disabled(channel):
+        log_msg("WARN", "[broadcast_messages] there's no channel environment variable")
         return
 
-    if is_not_null_property(SLACK_TOKEN):
+    if is_enabled(SLACK_TOKEN):
         notif_message(payload, SLACK_TOKEN, SLACK_WEBHOOK_TPL, channel)
     
-    if is_not_null_property(DISCORD_TOKEN):
+    if is_enabled(DISCORD_TOKEN):
         notif_message(payload, DISCORD_TOKEN, DISCORD_WEBHOOK_TPL, channel)
 
     if is_public:

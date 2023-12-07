@@ -9,7 +9,7 @@ import re
 import os
 import requests
 
-from utils.common import is_empty, is_from_another_account, is_not_empty, is_not_empty_array, is_null_property, sn_message
+from utils.common import is_disabled, is_empty, is_from_another_account, is_not_empty, is_not_empty_array, sn_message
 from utils.logger import log_msg
 from utils.redis import get_cache_value, set_cache_value
 
@@ -41,7 +41,7 @@ def generate_signature (appid, env, uri):
     return "Auth ?auth_signature={}&auth_nonce={}&auth_callback={}&auth_timestamp={}&auth_token={}&auth_signature_method={}&auth_consumer_key={}".format(auth_signature, auth_nonce, auth_callback, auth_timestamp, auth_token, auth_signature_method, auth_consumer_key)
 
 def is_uprodit_disabled():
-    return any(is_null_property(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD])
+    return any(is_disabled(p) for p in [UPRODIT_APPID, UPRODIT_ENV, UPRODIT_USERNAME, UPRODIT_PASSWORD])
 
 def generate_token():
     payload = {"username": UPRODIT_USERNAME, "password": UPRODIT_PASSWORD}
