@@ -6,6 +6,9 @@ import sys
 
 from utils.common import is_disabled, is_enabled, is_true
 
+SLACK_WEBHOOK_TPL = "https://hooks.slack.com/services/{}"
+DISCORD_WEBHOOK_TPL = "https://discord.com/api/webhooks/{}/slack"
+
 LOG_LEVEL = os.environ['LOG_LEVEL']
 LOG_FORMAT = os.getenv('LOG_FORMAT')
 
@@ -31,7 +34,7 @@ def slack_message(log_level, message, is_public):
 
     if is_enabled(token):
         data = { "attachments": [{ "color": get_color_level(log_level), "text": message, "title": log_level }], "username": _username, "channel": os.environ['SLACK_CHANNEL'], "icon_emoji": os.environ['SLACK_EMOJI'] }
-        requests.post("https://hooks.slack.com/services/{}".format(token), json = data)
+        requests.post(SLACK_WEBHOOK_TPL.format(token), json = data)
 
 def discord_message(log_level, message, is_public):
     token = _discord_token
@@ -42,7 +45,7 @@ def discord_message(log_level, message, is_public):
 
     if is_enabled(token):
         data = { "attachments": [{ "color": get_color_level(log_level), "text": message, "title": log_level }], "username": _username }
-        requests.post("https://discord.com/api/webhooks/{}/slack".format(token), json = data)
+        requests.post(DISCORD_WEBHOOK_TPL.format(token), json = data)
 
 def is_level_partof(level, levels):
     return any(l == "{}".format(level).lower() for l in levels)

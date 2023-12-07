@@ -2,15 +2,12 @@ import os
 import requests
 
 from utils.common import is_empty, is_not_empty, is_not_null_property, is_null_property, is_true
-from utils.logger import log_msg
+from utils.logger import DISCORD_WEBHOOK_TPL, SLACK_WEBHOOK_TPL, log_msg
 
 SLACK_TRIGGER = os.getenv('SLACK_TRIGGER')
 SLACK_TOKEN = os.getenv('SLACK_TOKEN')
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 DISCORD_ENABLE_MATCHING = os.getenv('DISCORD_ENABLE_MATCHING')
-
-SLACK_WEBHOOK_TPL = "https://hooks.slack.com/services/{}"
-DISCORD_WEBHOOK_TPL = "https://discord.com/api/webhooks/{}/slack"
 
 def notif_message ( message , token , username, webhook_tpl, channel):
     if is_not_null_property(SLACK_TRIGGER) and is_true(SLACK_TRIGGER):
