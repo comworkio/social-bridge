@@ -40,12 +40,13 @@ class BetteruptimeEndPoint(Resource):
         if is_not_empty(BETTERUPTIME_KEY):
             key = request.headers.get('X-Betteruptime-Key')
             if BETTERUPTIME_KEY != key:
+                log_msg("WARN", "[betteruptime] try to join the webhook with the wrong header: {}".format(key))
                 return {
                     'status': 'authentication_failure',
                     'reason': 'Not the right key passed as header'
                 }, 401
 
-        i = 1
+        i = 0
         match = False
         while True:
             domain_match = os.getenv("PROD_DOMAIN_MATCH_{}".format(i))
