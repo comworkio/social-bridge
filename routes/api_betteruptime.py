@@ -5,7 +5,7 @@ from flask_restful import Resource, reqparse
 
 from utils.common import is_empty, is_not_empty
 from utils.logger import log_msg
-from utils.slack import incident_message
+from utils.notif import incident_message
 
 incident_parser = reqparse.RequestParser()
 incident_parser.add_argument('data', type=dict)
