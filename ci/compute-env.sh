@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export LOG_LEVEL=INFO
+export LOG_LEVEL=DEBUG
 export WAIT_TIME=60
 export KEYWORD_WAIT_TIME=2
 export TWITTER_MAX_RESULTS=100

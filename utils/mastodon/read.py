@@ -6,7 +6,7 @@ from datetime import datetime
 from urlextract import URLExtract
 from utils.common import extract_alphanum, is_empty, is_from_another_account, is_not_empty, is_not_null_property
 from utils.config import get_keywords, get_owners, get_usernames
-from utils.logger import log_msg, quiet_log_msg
+from utils.logger import log_msg
 from utils.mastodon.common import MASTODON_BASE_URL
 from utils.redis import get_cache_value, set_cache_value
 from utils.notif import notif_messages
@@ -68,10 +68,10 @@ def stream_keyword(keyword, usernames, owners):
 
             d = diff_in_days(timestamp)
             if d >= TWITTER_RETENTION_DAYS:
-                quiet_log_msg("DEBUG", "[mastodon][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
+                log_msg("DEBUG", "[mastodon][stream_keywoards] timestamp = {}, d = {} >= {}".format(timestamp.isoformat(), d, TWITTER_RETENTION_DAYS))
                 continue
 
-            quiet_log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
+            log_msg("INFO", "[mastodon][stream_keyword] found tweet username = {}, content = {}".format(username, content))
             notif_messages({ "message": content, "username": username }, True)
             send_uprodit(username, content, _EXTRACTOR.find_urls(content))
             tweet(username, content)

@@ -14,33 +14,37 @@ def notif_message(payload, token, webhook_tpl, channel):
         return
 
     url = webhook_tpl.format(token)
-    npayload = { "username": payload['username'] }
+    n_payload = { "username": payload['username'] }
 
     if "color" in payload and "title" in payload:
-        npayload['attachments'] = [{ 
+        n_payload['attachments'] = [{ 
             "text": payload['message'], 
             "color": payload['color'], 
             "title": payload['title'] 
         }]
     elif "color" in payload:
-        npayload['attachments'] = [{ 
+        n_payload['attachments'] = [{ 
             "text": payload['message'], 
             "color": payload['color'] 
         }]
     elif "title" in payload:
-        npayload['attachments'] = [{ 
+        n_payload['attachments'] = [{ 
             "text": payload['message'], 
             "title": payload['title'] 
         }]
     else:
-        npayload['message'] = payload['message']
+        n_payload['message'] = payload['message']
 
     if "discord" not in webhook_tpl:
-        npayload['channel'] = channel
-        npayload['icon_emoji'] = ":{}:".format(payload['username'])
+        n_payload['channel'] = channel
+        n_payload['icon_emoji'] = ":{}:".format(payload['username'])
 
     try:
-        requests.post(url, json = npayload)
+        log_msg("DEBUG", "[notif_message] send payload to webhook {}: {}".format(url, n_payload))
+        r = requests.post(url, json = n_payload)
+        if not (r.status_code >= 200 and r.status_code < 400):
+            log_msg("ERROR", "[notif_message] webhook respond with error: code = {}, body = {}".format(r.status_code, r.content))
+
     except Exception as e:
         log_msg("ERROR", "[notif_message] exception occured posting on this url = {}, e = {}".format(url, e))
 
@@ -59,7 +63,8 @@ def broadcast_messages(payload, is_public, channel_key):
         i = 1
         while True:
             token_val = os.getenv("SLACK_PUBLIC_TOKEN_{}".format(i))
-            if is_empty(token_val):
+            if is_empty(token_val) and i > 0:
+                log_msg("DEBUG", "[broadcast_messages] no more token, i = {}".format(i))
                 break
             notif_message(payload, token_val, SLACK_WEBHOOK_TPL, channel)
             i = i + 1
@@ -73,7 +78,8 @@ def broadcast_messages(payload, is_public, channel_key):
             i = 1
             while True:
                 token_val = os.getenv("DISCORD_PUBLIC_TOKEN_{}".format(i))
-                if is_empty(token_val):
+                if is_empty(token_val) and i > 0:
+                    log_msg("DEBUG", "[broadcast_messages] no more token, i = {}".format(i))
                     break
                 notif_message(payload, token_val, DISCORD_WEBHOOK_TPL, channel)
                 i = i + 1

@@ -15,7 +15,7 @@ mirror:
 build_x86:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "x86" "social-bridge" "2.16"
+    - setsid ./ci/docker-deliver.sh "x86" "social-bridge" "2.17"
   only:
     refs:
       - /^(main.*)$/
@@ -39,7 +39,7 @@ build_x86:
 build_arm:
   stage: deliver
   script:
-    - setsid ./ci/docker-deliver.sh "arm" "social-bridge" "2.16"
+    - setsid ./ci/docker-deliver.sh "arm" "social-bridge" "2.17"
   only:
     refs:
       - /^(main.*)$/
