@@ -7,8 +7,11 @@ def get_list_configs(key_prefix, format):
     list_values = []
     while True:
         value = os.getenv("{}_{}".format(key_prefix, i))
-        if is_empty(value) and i > 0:
-            break
+        if is_empty(value):
+            if i < 0:
+                continue
+            else:
+                break
         formated_val = format(value)
         if formated_val not in list_values:
             list_values.append(formated_val)
