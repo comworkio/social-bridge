@@ -81,6 +81,7 @@ def broadcast_messages(payload, is_public, channel_key):
                 token_val = os.getenv("DISCORD_PUBLIC_TOKEN_{}".format(i))
                 if is_empty(token_val):
                     if i <= 0:
+                        i = i + 1
                         continue
                     else:
                         log_msg("DEBUG", "[broadcast_messages] no more token, i = {}".format(i))

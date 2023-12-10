@@ -52,6 +52,7 @@ class BetteruptimeEndPoint(Resource):
             domain_match = os.getenv("PROD_DOMAIN_MATCH_{}".format(i))
             if is_empty(domain_match):
                 if i <= 0:
+                    i = i + 1
                     continue
                 else:
                     break

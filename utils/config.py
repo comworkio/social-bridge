@@ -9,6 +9,7 @@ def get_list_configs(key_prefix, format):
         value = os.getenv("{}_{}".format(key_prefix, i))
         if is_empty(value):
             if i <= 0:
+                i = i + 1
                 continue
             else:
                 break
