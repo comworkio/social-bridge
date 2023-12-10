@@ -17,18 +17,18 @@ def notif_message(payload, token, webhook_tpl, channel):
     n_payload = { "username": payload['username'] }
 
     if "color" in payload and "title" in payload:
-        n_payload['attachments'] = [{ 
+        n_payload['attachments'] = [{
             "text": payload['message'], 
             "color": payload['color'], 
             "title": payload['title'] 
         }]
     elif "color" in payload:
-        n_payload['attachments'] = [{ 
+        n_payload['attachments'] = [{
             "text": payload['message'], 
             "color": payload['color'] 
         }]
     elif "title" in payload:
-        n_payload['attachments'] = [{ 
+        n_payload['attachments'] = [{
             "text": payload['message'], 
             "title": payload['title'] 
         }]
