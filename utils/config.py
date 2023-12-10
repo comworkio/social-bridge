@@ -3,11 +3,11 @@ import os
 from utils.common import extract_alphanum, is_empty
 
 def get_list_configs(key_prefix, format):
-    i = 1
+    i = 0
     list_values = []
     while True:
         value = os.getenv("{}_{}".format(key_prefix, i))
-        if is_empty(value):
+        if is_empty(value) and i > 0:
             break
         formated_val = format(value)
         if formated_val not in list_values:

@@ -61,7 +61,7 @@ def broadcast_messages(payload, is_public, channel_key):
         notif_message(payload, DISCORD_TOKEN, DISCORD_WEBHOOK_TPL, channel)
 
     if is_public:
-        i = 1
+        i = 0
         while True:
             token_val = os.getenv("SLACK_PUBLIC_TOKEN_{}".format(i))
             if is_empty(token_val) and i > 0:
@@ -76,7 +76,7 @@ def broadcast_messages(payload, is_public, channel_key):
             if is_not_empty(token_val):
                 notif_message(payload, token_val, DISCORD_WEBHOOK_TPL, channel)
         else:
-            i = 1
+            i = 0
             while True:
                 token_val = os.getenv("DISCORD_PUBLIC_TOKEN_{}".format(i))
                 if is_empty(token_val) and i > 0:
