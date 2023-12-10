@@ -8,7 +8,7 @@ def get_list_configs(key_prefix, format):
     while True:
         value = os.getenv("{}_{}".format(key_prefix, i))
         if is_empty(value):
-            if i < 0:
+            if i <= 0:
                 continue
             else:
                 break
