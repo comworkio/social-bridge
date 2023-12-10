@@ -8,12 +8,18 @@ SLACK_TRIGGER = os.getenv('SLACK_TRIGGER')
 SLACK_TOKEN = os.getenv('SLACK_TOKEN')
 DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
 DISCORD_ENABLE_MATCHING = os.getenv('DISCORD_ENABLE_MATCHING')
+CUSTOM_ALERT_URL = os.getenv('CUSTOM_ALERT_URL')
 
 def notif_message(payload, token, webhook_tpl, channel):
     if not is_notif_enabled():
         return
 
-    url = webhook_tpl.format(token)
+    notif_url(payload, webhook_tpl.format(token), channel)
+
+def notif_url(payload, url, channel):
+    if is_empty(url):
+        return
+
     n_payload = { "username": payload['username'] }
 
     if "color" in payload and "title" in payload:
@@ -35,7 +41,7 @@ def notif_message(payload, token, webhook_tpl, channel):
     else:
         n_payload['message'] = payload['message']
 
-    if "discord" not in webhook_tpl:
+    if "discord" not in url:
         n_payload['channel'] = channel
         n_payload['icon_emoji'] = ":{}:".format(payload['username'])
 
@@ -59,6 +65,8 @@ def broadcast_messages(payload, is_public, channel_key):
     
     if is_enabled(DISCORD_TOKEN):
         notif_message(payload, DISCORD_TOKEN, DISCORD_WEBHOOK_TPL, channel)
+
+    notif_url(payload, CUSTOM_ALERT_URL, channel)
 
     if is_public:
         i = 0
