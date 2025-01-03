@@ -6,3 +6,4 @@ urlextract
 Mastodon.py
 html2text
 tweepy
+standard-imghdr
