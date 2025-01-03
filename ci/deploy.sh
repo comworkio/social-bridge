@@ -18,4 +18,4 @@ done
 
 docker rmi -f "comworkio/social-bridge:${SOCIAL_BRIDGE_VERSION}" || :
 docker ps|awk '($0 ~ "(twitter-slack|cross)"){system("docker rm -f "$1)}' || :
-docker-compose -f docker-compose-intra.yml up -d --force-recreate
+docker compose -f docker-compose-intra.yml up -d --force-recreate

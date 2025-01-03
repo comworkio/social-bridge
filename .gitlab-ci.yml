@@ -36,30 +36,6 @@ build_x86:
   tags:
     - imagesbuilder
 
-build_arm:
-  stage: deliver
-  script:
-    - setsid ./ci/docker-deliver.sh "arm" "social-bridge" "2.24"
-  only:
-    refs:
-      - /^(main.*)$/
-    changes:
-      - .gitlab-ci.yml
-      - utils/*
-      - utils/mastodon/*
-      - utils/twitter/*
-      - routes/*
-      - api.py
-      - requirements.txt
-      - ci/docker-deliver.sh
-      - ci/deploy.sh
-      - ci/compute-env.sh
-      - docker-compose-build-arm.yml
-      - docker-compose-intra.yml
-      - Dockerfile.arm
-  tags:
-    - buildarm
-
 deploy:
   stage: deploy
   script:
